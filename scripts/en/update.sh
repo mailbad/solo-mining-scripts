@@ -2,7 +2,7 @@
 
 function check_version()
 {
-	login_info "Skip Check Version"
+	log_info "Skip Check Version"
 	exit 0
 
 	if ! type wget unzip > /dev/null; then apt-get install -y wget unzip;fi
