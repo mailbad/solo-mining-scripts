@@ -70,7 +70,8 @@ function config()
 {
 	if version_gt $(uname -r|awk -F "-" '{print $1}') "5.10"; then
 		log_info "----------Your kernel version is greater than 5.10, the kernel version is too high.Please lower the kernel version!----------"
-		exit 1
+		# disable test ubuntu 20.04 and kernel 5.13
+		# exit 1
 	fi
 	log_info "----------Test confidenceLevel, waiting for Intel to issue IAS remote certification report!----------"
 	local Level=$(phala sgx-test | awk '/confidenceLevel =/{ print $3 }' | tr -cd "[0-9]")

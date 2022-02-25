@@ -32,7 +32,8 @@ function install_depenencies()
 						apt-get install -y nodejs
 						;;
 					yq)
-						wget https://github.com/mikefarah/yq/releases/download/v4.11.2/yq_linux_amd64.tar.gz -O /tmp/yq_linux_amd64.tar.gz
+						#wget https://github.com/mikefarah/yq/releases/download/v4.11.2/yq_linux_amd64.tar.gz -O /tmp/yq_linux_amd64.tar.gz
+						wget https://github.com/mikefarah/yq/releases/download/v4.20.2/yq_linux_amd64.tar.gz -O /tmp/yq_linux_amd64.tar.gz
 						tar -xvf /tmp/yq_linux_amd64.tar.gz -C /tmp
 						mv /tmp/yq_linux_amd64 /usr/bin/yq
 						rm /tmp/yq_linux_amd64.tar.gz
@@ -61,6 +62,21 @@ function remove_dirver()
 
 function install_dcap()
 {
+	# fix ubuntu 20.04 and kernel 5.13
+        if [[ $(uname -r) =~ ^"5.13" ]];then
+		echo "deb https://download.fortanix.com/linux/apt xenial main" | sudo tee -a /etc/apt/sources.list.d/fortanix.list >/dev/null && \
+		curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
+		sudo apt-get update && \
+		sudo apt-get install intel-sgx-dkms
+		return 0
+	elif [[ $(uname -r) =~ ^"5.11" ]];then
+		log_err "$(uname -r) Not Support, Please Update Kernel"
+		exit 1
+	else
+		pass
+	fi
+
+
 	log_info "----------Downloading dcap driver----------"
 	for i in `seq 0 4`; do
 		wget $dcap_driverurl -O /tmp/$dcap_driverbin
