@@ -103,8 +103,9 @@ function phala_scripts_main() {
   # set locale lange
   phala_scripts_utils_setlocale
 
-  # check system
-  phala_scripts_check_system
+  # check 
+  phala_scripts_check
+  
   # run main case
   phala_script_case $*
 

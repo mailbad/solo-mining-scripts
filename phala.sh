@@ -20,7 +20,6 @@ fi
 # source 
 . ${phala_script_dir}/scripts/main.sh
 
-
 #check sudo
 if [ $UID -ne 0 ];then
   printf "\033[0;31m Please run with sudo! \033[0m\n"

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-phala_script_support_system=(
+phala_scripts_support_system=(
     "Ubuntu 20.04"
+)
+phala_scripts_support_kernel=(
+    "5.4",
+    "5.13"
 )
 
 function phala_scripts_config_show() {
