@@ -10,20 +10,21 @@ else
   phala_script_dir=$(cd $(dirname $0);pwd)
 fi
 
-# source 
-. ${phala_script_dir}/scripts/utils.sh
-. ${phala_script_dir}/scripts/log.sh
-. ${phala_script_dir}/scripts/main.sh
-
 #check shell
 phala_shellname="$(ps -o comm= $$)"
 if [ "$(basename ${phala_shellname})" != "bash" ];then
-  phala_scripts_log error "$(phala_scripts_utils_locale 'Please is Bash run!')"
+  printf "\033[0;31m Please is Bash run! \033[0m\n"
+  exit 1
 fi
+
+# source 
+. ${phala_script_dir}/scripts/main.sh
+
 
 #check sudo
 if [ $UID -ne 0 ];then
-  phala_scripts_log error "$(phala_scripts_utils_locale 'Please run with sudo!')"
+  printf "\033[0;31m Please run with sudo! \033[0m\n"
+  exit 1
 fi
 
 #run main

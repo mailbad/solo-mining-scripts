@@ -1,48 +1,58 @@
 #!/usr/bin/env bash
 
-function phala_scripts_help(){
-cat << EOF
-  Usage:
-	phala [OPTION]...
+# source 
+. ${phala_script_dir}/scripts/utils.sh
+. ${phala_script_dir}/scripts/log.sh
+. ${phala_script_dir}/scripts/config.sh
+. ${phala_script_dir}/scripts/check.sh
 
-  Options:
-	help					$(phala_scripts_utils_locale "display help information")
-	install					$(phala_scripts_utils_locale "install your phala node")
-		<dcap>				$(phala_scripts_utils_locale "install DCAP driver")
-		<isgx>				$(phala_scripts_utils_locale "install isgx driver")
-	uninstall				$(phala_scripts_utils_locale "uninstall your phala scripts")
-	start					$(phala_scripts_utils_locale "start mining")
-		<khala>				$(phala_scripts_utils_locale "start khala-node")
-	stop					$(phala_scripts_utils_locale "stop mining")
-		<node>				$(phala_scripts_utils_locale "stop phala-node container")
-		<pruntime>			$(phala_scripts_utils_locale "stop phala-pruntime container")
-		<pherry>			$(phala_scripts_utils_locale "stop phala-pherry container")
-		<bench>				$(phala_scripts_utils_locale "stop phala-pruntime-bench container")
-	config					
-		<show>				$(phala_scripts_utils_locale "display all configuration of your node")
-		<set>				$(phala_scripts_utils_locale "set all configuration")
-	status					$(phala_scripts_utils_locale "display the running status of all components")
-	update					$(phala_scripts_utils_locale "update all container,and don't clean up the container data")
-		<clean>				$(phala_scripts_utils_locale "update all container,and clean up the container data")
-		<script>			$(phala_scripts_utils_locale "update the script")
-	logs					$(phala_scripts_utils_locale "print all container logs information")
-		<node>				$(phala_scripts_utils_locale "print phala-node logs information")
-		<pruntime>			$(phala_scripts_utils_locale "print phala-pruntime logs information")
-		<pherry>			$(phala_scripts_utils_locale "print phala-pherry logs information")
-		<bench>				$(phala_scripts_utils_locale "print phala-pruntime-bench logs information")
-	sgx-test				$(phala_scripts_utils_locale "start the mining test program")
-	score-test				
-		<Parameter>			$(phala_scripts_utils_locale "get the scores of your machine")
-EOF
+
+function phala_scripts_help(){
+phala_scripts_utils_locale "Usage:\n"\
+"	phala [OPTION]...\n"\
+"\n"\
+"Options:\n"\
+"	help					display help information\n"\
+"	install					install your phala node\n"\
+"		<dcap>				install DCAP driver\n"\
+"		<isgx>				install isgx driver\n"\
+"	uninstall				uninstall your phala scripts\n"\
+"	start					start mining\n"\
+"		<khala>				start khala-node\n"\
+"	stop					stop mining\n"\
+"		<node>				stop phala-node container\n"\
+"		<pruntime>			stop phala-pruntime container\n"\
+"		<pherry>			stop phala-pherry container\n"\
+"		<bench>				stop phala-pruntime-bench container\n"\
+"	config\n"\
+"		<show>				display all configuration of your node\n"\
+"		<set>				set all configuration\n"\
+"	status					display the running status of all components\n"\
+"	update					update all container,and don't clean up the container data\n"\
+"		<clean>				update all container,and clean up the container data\n"\
+"		<script>			update the script\n"\
+"	logs					print all container logs information\n"\
+"		<node>				print phala-node logs information\n"\
+"		<pruntime>			print phala-pruntime logs information\n"\
+"		<pherry>			print phala-pherry logs information\n"\
+"		<bench>				print phala-pruntime-bench logs information\n"\
+"	sgx-test				start the mining test program\n"\
+"	score-test\n"\
+"		<Parameter>			get the scores of your machine"
 return 0
 }
 
 function phala_scripts_main() {
+  # return 1
   # Cannot run driectly
   if [ -z "${phala_script_dir}" ];then
   printf "\033[0;31m Cannot run driectly \033[0m\n"
     exit 1
   fi
+
+  # check system
+  phala_scripts_check_system
+
   case "$1" in
     install)
       install $2
@@ -91,3 +101,33 @@ function phala_scripts_main() {
     ;;
   esac
 }
+txt=$(gettext -se "Phala Status:\n"\
+"------------------------------ Script version %s ----------------------------\n"\
+"	service name		service status		local node block height\n"\
+"--------------------------------------------------------------------------\n"\
+"	khala-node		%s			%s / %s\n"\
+"	kusama-node		%s			%s / %s\n"\
+"	phala-pruntime		%s\n"\
+"	phala-pherry		%s			khala %s / kusama %s\n"\
+"--------------------------------------------------------------------------\n"\
+"	Status check						result\n"\
+"--------------------------------------------------------------------------\n"\
+"	khala chain synchronization status		%s, difference is %s\n"\
+"	kusama chain synchronization status		%s, difference is %s\n"\
+"	pherry synchronizes khala chain status		%s, difference is %s\n"\
+"	pherry syncs kusama chain status  		%s, difference is %s\n"\
+"--------------------------------------------------------------------------\n"\
+"	account information		content\n"\
+"--------------------------------------------------------------------------\n"\
+"	node name           		%s\n"\
+"	cores     			%s\n"\
+"	GAS account address      	%s\n"\
+"	GAS account balance      	%s\n"\
+"	stake pool account address	%s\n"\
+"	miner/worker public key 	%s\n"\
+"	miner registration status	%s\n"\
+"	miner score			%s\n"\
+"--------------------------------------------------------------------------")
+
+
+# printf "$txt\n"
