@@ -57,9 +57,9 @@ function phala_scripts_main() {
     presync)
         local node_name
         while true ; do
-            read -p "Enter your node name (no spaces): " node_name
-            if [[ $node_name =~ \ |\' ]]; then
-                printf "The node name cannot contain spaces, please re-enter!\n"
+            read -p "$(phala_scripts_utils_locale 'Enter your node name (no spaces)'): " node_name
+            if [[ "$node_name" =~ \ |\' ]] || [ -z "$node_name" ]; then
+                printf "$(phala_scripts_utils_locale The node name cannot contain spaces, please re-enter!)\n"
             else
                 sed -i "7c NODE_NAME=$node_name" $installdir/.env
                 break
