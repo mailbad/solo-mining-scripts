@@ -42,17 +42,7 @@ phala_scripts_utils_locale "Usage:\n"\
 return 0
 }
 
-function phala_scripts_main() {
-  # return 1
-  # Cannot run driectly
-  if [ -z "${phala_script_dir}" ];then
-  printf "\033[0;31m Cannot run driectly \033[0m\n"
-    exit 1
-  fi
-
-  # check system
-  phala_scripts_check_system
-
+function phala_script_case() {
   case "$1" in
     install)
       install $2
@@ -100,6 +90,22 @@ function phala_scripts_main() {
         phala_scripts_help
     ;;
   esac
+}
+
+function phala_scripts_main() {
+  # return 1
+  # Cannot run driectly
+  if [ -z "${phala_script_dir}" ];then
+  printf "\033[0;31m Cannot run driectly \033[0m\n"
+    exit 1
+  fi
+
+  # check system
+  phala_scripts_check_system
+
+  # run main case
+  phala_script_case $*
+
 }
 txt=$(gettext -se "Phala Status:\n"\
 "------------------------------ Script version %s ----------------------------\n"\
