@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 function phala_scripts_utils_setlocale() {
-  export TEXTDOMAINDIR=${phala_script_dir}/locale
+  export TEXTDOMAINDIR=${phala_scripts_dir}/locale
   export TEXTDOMAIN=phala
   
   if [[ "$LANG" =~ "en" ]] || [[ "$LANG" =~ "zh" ]];then
     # test run
-    if $(localectl list-locales >/dev/null 2>&1 |grep -i zh_CN );then
+    if $(localectl list-locales 2>/dev/null |grep -i zh_CN >/dev/null 2>&1);then
       export LANG="zh_CN.UTF-8"
     else
       # sudo apt -y  install language-pack-zh-hans
@@ -25,7 +25,7 @@ function phala_scripts_utils_gettext() {
 function _echo_c() {
   if [ "$shell_name" != "bash" ] || [[ "$2" =~ "%" ]];then
     [ -z "$_phala_scripts_utils_printf_value" ] && _phala_scripts_utils_printf_value=""
-    printf "\033[0;$1m$2\033[0m\n" ${_phala_scripts_utils_printf_value}
+    printf "\033[0;$1m$2\033[0m\n" "${_phala_scripts_utils_printf_value}"
     unset _phala_scripts_utils_printf_value
 
   else

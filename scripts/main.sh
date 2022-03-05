@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # source 
-. ${phala_script_dir}/scripts/utils.sh
-. ${phala_script_dir}/scripts/log.sh
-. ${phala_script_dir}/scripts/config.sh
-. ${phala_script_dir}/scripts/check.sh
+. ${phala_scripts_dir}/scripts/utils.sh
+. ${phala_scripts_dir}/scripts/log.sh
+. ${phala_scripts_dir}/scripts/config.sh
+. ${phala_scripts_dir}/scripts/check.sh
 
 
 function phala_scripts_help(){
@@ -42,7 +42,7 @@ phala_scripts_utils_gettext "Usage:\n"\
 return 0
 }
 
-function phala_script_case() {
+function phala_scripts_case() {
   case "$1" in
     install)
       install $2
@@ -95,11 +95,12 @@ function phala_script_case() {
 function phala_scripts_main() {
   # return 1
   # Cannot run driectly
-  if [ -z "${phala_script_dir}" ];then
+  if [ -z "${phala_scripts_dir}" ];then
   printf "\033[0;31m Cannot run driectly \033[0m\n"
     exit 1
   fi
-
+  phala_scripts_tools_dir="${phala_scripts_dir}/tools"
+  phala_scripts_conf_dir="${phala_scripts_dir}/conf"
   # set locale lange
   phala_scripts_utils_setlocale
 
@@ -107,7 +108,7 @@ function phala_scripts_main() {
   phala_scripts_check
   
   # run main case
-  phala_script_case $*
+  phala_scripts_case $*
 
 }
 txt=$(gettext -se "Phala Status:\n"\

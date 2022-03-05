@@ -5,9 +5,9 @@ set -e
 # check script dir
 # other system readlink -f [False]
 if [ -L $0 ];then
-  phala_script_dir=$(cd $(dirname $(readlink $0));pwd)
+  phala_scripts_dir=$(cd $(dirname $(readlink $0));pwd)
 else
-  phala_script_dir=$(cd $(dirname $0);pwd)
+  phala_scripts_dir=$(cd $(dirname $0);pwd)
 fi
 
 #check shell
@@ -18,7 +18,7 @@ if [ "$(basename ${phala_shellname})" != "bash" ];then
 fi
 
 # source 
-. ${phala_script_dir}/scripts/main.sh
+. ${phala_scripts_dir}/scripts/main.sh
 
 #check sudo
 if [ $UID -ne 0 ];then
