@@ -20,7 +20,16 @@ function phala_scripts_check_kernel() {
   fi
 }
 
+function phala_scripts_check_sgxenable() {
+  _sgx_enable=${phala_script_dir}/tools/sgx_enable
+  if ! $($_sgx_enable -s|grep -i 'already enabled' >/dev/null 2>&1);then
+    export _phala_scripts_utils_printf_value=$_sgx_enable
+    phala_scripts_log error "Please first run [%s]!" 
+  fi
+}
+
 function phala_scripts_check() {
   phala_scripts_check_system
   phala_scripts_check_kernel
+  phala_scripts_check_sgxenable
 }

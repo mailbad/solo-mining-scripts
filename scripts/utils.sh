@@ -23,8 +23,11 @@ function phala_scripts_utils_gettext() {
 }
 
 function _echo_c() {
-  if [ "$shell_name" != "bash" ];then
-    printf "\033[0;$1m$2\033[0m\n"
+  if [ "$shell_name" != "bash" ] || [[ "$2" =~ "%" ]];then
+    [ -z "$_phala_scripts_utils_printf_value" ] && _phala_scripts_utils_printf_value=""
+    printf "\033[0;$1m$2\033[0m\n" ${_phala_scripts_utils_printf_value}
+    unset _phala_scripts_utils_printf_value
+
   else
     echo -en "\033[0;$1m$2\033[0m\n"
   fi
