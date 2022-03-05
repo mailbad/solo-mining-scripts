@@ -44,25 +44,27 @@ function phala_scripts_check_sgxenable() {
 }
 
 function phala_scripts_check_dependencies(){
-  _default_soft="jq curl wget unzip zip docker docker-compose node"
+  _default_soft="jq curl wget unzip zip"
+  _other_soft="docker docker-compose node"
   if ! type $_default_soft >/dev/null 2>&1;then
     phala_scripts_log info "Apt update" cut
     apt update
     if [ $? -ne 0 ]; then
 		  phala_scripts_log error "Apt update failed."
 	  fi
-  else
+    phala_scripts_log info "Installing Apt dependencies" cut
+    apt install -y ${_default_soft}
+  fi
+
+  if type $_other_soft > /dev/null 2>&1;then
     return 0
   fi
 
-  phala_scripts_log info "Installing dependencies" cut
-  for _package in $_default_soft;do
+  phala_scripts_log info "Installing other dependencies" cut
+  for _package in ${_other_soft};do
     if ! type $_package >/dev/null 2>&1;then
       case $_package in
-        jq|curl|wget|unzip|zip|dkms)
-          apt install -y $_package
-        ;;
-        docker)
+        docker|docker-compose)
           if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
             curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
           fi
