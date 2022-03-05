@@ -17,12 +17,12 @@ function phala_scripts_log() {
 
   local datetime=$(date +'%F %H:%M:%S')
   if [ -z "$1" ] && [ -z "$2" ] ;then
-    phala_scripts_utils_red "[$datetime]\t" $(phala_scripts_utils_locale 'log type or msg not found!!!')
+    phala_scripts_utils_red "[$datetime]\t" $(phala_scripts_utils_gettext 'log type or msg not found!!!')
     return 1
   fi
     
   local logtype=$(echo $1|tr a-z A-Z)
-  local msg=$(phala_scripts_utils_locale $2)
+  local msg=$(phala_scripts_utils_gettext $2)
   local source_path=$(caller 0 |sed "s#${script_dir}#.#g"|awk '{print $3":"$1}')
   local logformat="[${datetime}\t${logtype}\t${source_path}]\t${msg}"
 

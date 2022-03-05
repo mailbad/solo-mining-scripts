@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-
-
-function phala_scripts_utils_locale() {
+function phala_scripts_utils_setlocale() {
   export TEXTDOMAINDIR=${phala_script_dir}/locale
   export TEXTDOMAIN=phala
   
@@ -18,8 +16,10 @@ function phala_scripts_utils_locale() {
   else
     export LANG="en_US.UTF-8"
   fi
-  gettext -se "$*"
+}
 
+function phala_scripts_utils_gettext() {
+  gettext -se "$*"
 }
 
 function _echo_c() {

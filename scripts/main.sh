@@ -8,7 +8,7 @@
 
 
 function phala_scripts_help(){
-phala_scripts_utils_locale "Usage:\n"\
+phala_scripts_utils_gettext "Usage:\n"\
 "	phala [OPTION]...\n"\
 "\n"\
 "Options:\n"\
@@ -57,9 +57,9 @@ function phala_script_case() {
     presync)
         local node_name
         while true ; do
-            read -p "$(phala_scripts_utils_locale 'Enter your node name (no spaces)'): " node_name
+            read -p "$(phala_scripts_utils_gettext 'Enter your node name (no spaces)'): " node_name
             if [[ "$node_name" =~ \ |\' ]] || [ -z "$node_name" ]; then
-                printf "$(phala_scripts_utils_locale The node name cannot contain spaces, please re-enter!)\n"
+                printf "$(phala_scripts_utils_gettext The node name cannot contain spaces, please re-enter!)\n"
             else
                 sed -i "7c NODE_NAME=$node_name" $installdir/.env
                 break
@@ -100,9 +100,11 @@ function phala_scripts_main() {
     exit 1
   fi
 
+  # set locale lange
+  phala_scripts_utils_setlocale
+
   # check system
   phala_scripts_check_system
-
   # run main case
   phala_script_case $*
 
