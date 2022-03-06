@@ -73,6 +73,7 @@ function phala_scripts_uninstall() {
   phala_scripts_install_otherdependencies uninstall "${phala_scripts_dependencies_other_soft[@]}"
   phala_scripts_install_sgx uninstall
   # test delete
+  unlink /usr/local/bin/phala
   mv ${phala_scripts_dir} ${phala_scripts_dir}.movetest
   phala_scripts_log info "Uninstall phala node sucess" cut
 }
