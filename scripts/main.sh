@@ -58,7 +58,7 @@ function phala_scripts_case() {
       phala_scripts_config_set $*
     ;;
     version)
-      printf "Phala Scripts Version: %s" ${phala_scripts_version}
+      printf "Phala Scripts Version: %s\n" ${phala_scripts_version}
     ;;
     start)
         start
