@@ -49,16 +49,20 @@ function phala_scripts_start() {
   phala_scripts_utils_docker up -d
 }
 
-function phala_scripts_stop() {
+function phala_scripts_stop_logs() {
   phala_scripts_check_envf
   phala_scripts_check_ymlf
-  local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${1}$")
-  if [ -z "$1" ];then
+  local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${2}$")
+  if [ -z "$2" ] && [ "$1" == "stop" ];then
     phala_scripts_utils_docker stop
     phala_scripts_utils_docker rm -f
-  elif [[ ! -z ${_container_name} ]];then
+  elif [[ ! -z ${_container_name} ]] && [ "$1" == "stop" ];then
     phala_scripts_utils_docker stop ${_container_name}
     phala_scripts_utils_docker rm -f ${_container_name}
+  elif [ -z "$2" ] && [ "$1" == "logs" ];then
+    phala_scripts_utils_docker logs -f
+  elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
+    phala_scripts_utils_docker logs -f ${_container_name}
   else
     phala_scripts_help
   fi
@@ -94,8 +98,7 @@ function phala_scripts_case() {
       fi
     ;;
     stop)
-      shift
-      phala_scripts_stop $*
+      phala_scripts_stop_logs $*
     ;;
     status)
         status $2
@@ -104,7 +107,7 @@ function phala_scripts_case() {
         update $2
     ;;
     logs)
-        logs $2
+      phala_scripts_stop_logs $*
     ;;
     uninstall)
         uninstall
