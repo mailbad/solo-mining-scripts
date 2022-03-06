@@ -33,6 +33,10 @@ phala_scripts_config_default() {
   phala_pherry_image=phalanetwork/phala-pherry
 
   phala_scripts_public_ws="wss://khala.api.onfinality.io/public-ws"
+  phala_scripts_public_ws_dev="wss://pc-test-3.phala.network/khala/ws"
+
+  phala_scripts_kusama_ws="wss://kusama.api.onfinality.io/public-ws"
+  #phala_scripts_kusama_ws_dev="wss://?????????/public-ws"
 
   khala_data_path_default="/var/khala"
 
@@ -56,6 +60,9 @@ phala_scripts_config_default() {
          phala_pruntime_image \
          phala_pherry_image \
          phala_scripts_public_ws \
+         phala_scripts_public_ws_dev \
+         phala_scripts_kusama_ws \
+         phala_scripts_kusama_ws_dev \
          khala_data_path_default \
          phala_scripts_tools_dir \
          phala_scripts_conf_dir \
@@ -101,6 +108,8 @@ function phala_scripts_config_set() {
     return 0
   elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];then
     _phala_env=DEV
+    phala_node_image=${phala_node_dev_image}
+    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
   elif [ ! -z "$1" ];then
     phala_scripts_help
     return 1
