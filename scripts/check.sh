@@ -114,7 +114,7 @@ function phala_scripts_check_sgxdevice() {
   fi
   
   if [ "${_sgx_msg_device_path}" == "/dev/sgx_enclave" ];then
-    phala_scripts_sgx_device_path=(/dev/sgx_enclave:/var/sgx/encalave /dev/sgx_provision:/var/sgx/provision)
+    phala_scripts_sgx_device_path=(/dev/sgx_enclave:/dev/sgx/encalave /dev/sgx_provision:/dev/sgx/provision)
   else
     phala_scripts_sgx_device_path=${_sgx_msg_device_path}
   fi
