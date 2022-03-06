@@ -68,6 +68,10 @@ phala_scripts_config_default() {
 }
 
 function phala_scripts_config_dockeryml() {
+  if [ ! -f ${phala_scripts_temp_ymlf} ];then
+    _phala_scripts_utils_printf_value="${phala_scripts_temp_ymlf}"
+    phala_scripts_log error "%s\nTemplate file not found!" cut
+  fi
   # check and install
   phala_scripts_check_sgxdevice
   local _phala_docker_yml=""
@@ -98,7 +102,11 @@ function phala_scripts_config_set() {
     phala_scripts_help
     return 1
   fi
-  
+
+  if [ ! -f ${phala_scripts_temp_envf} ];then
+    _phala_scripts_utils_printf_value="${phala_scripts_temp_envf}"
+    phala_scripts_log error "%s\nTemplate file not found!" cut
+  fi  
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
