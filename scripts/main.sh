@@ -118,7 +118,9 @@ function phala_scripts_case() {
         update $2
     ;;
     logs)
+      set +e
       phala_scripts_stop_logs $*
+      set -e
     ;;
     uninstall)
       set +e
