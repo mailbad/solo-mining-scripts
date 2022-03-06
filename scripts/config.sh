@@ -34,9 +34,11 @@ phala_scripts_config_default() {
 
   phala_scripts_public_ws="wss://khala.api.onfinality.io/public-ws"
   phala_scripts_public_ws_dev="wss://pc-test-3.phala.network/khala/ws"
+  #phala_scripts_public_ws_dev="wss://127.0.0.1:9944/khala/ws"
 
   phala_scripts_kusama_ws="wss://kusama.api.onfinality.io/public-ws"
-  #phala_scripts_kusama_ws_dev="wss://?????????/public-ws"
+  phala_scripts_kusama_ws_dev="wss://pc-test-3.phala.network/rococo/ws"
+  #phala_scripts_kusama_ws_dev="wss://127.0.0.1:9945/public-ws"
 
   khala_data_path_default="/var/khala"
 
