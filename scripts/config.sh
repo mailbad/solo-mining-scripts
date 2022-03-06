@@ -103,6 +103,19 @@ function phala_scripts_config_show() {
     cat ${phala_scripts_docker_envf}
 }
 
+phala_scripts_config_set_nodename() {
+  # set nodename
+  while true ; do
+    local _node_name=$(phala_scripts_utils_read "Enter your node name(not contain spaces)")
+    if [[ "${_node_name}" =~ \ |\' ]]; then
+      phala_scripts_log warn "The node name cannot contain spaces, please re-enter!" cut
+    else
+      echo ${_node_name}
+      break
+    fi
+  done
+}
+
 function phala_scripts_config_set() {
   local _phala_env=PRO
   if [ "$1" == "show" ];then
@@ -150,15 +163,16 @@ function phala_scripts_config_set() {
   done
 
   # set nodename
-  while true ; do
-    local _node_name=$(phala_scripts_utils_read "Enter your node name(not contain spaces)")
-    if [[ "${_node_name}" =~ \ |\' ]]; then
-      phala_scripts_log warn "The node name cannot contain spaces, please re-enter!" cut
-    else
-      export phala_scripts_config_input_nodename=${_node_name}
-      break
-    fi
-  done
+  # while true ; do
+  #   local _node_name=$(phala_scripts_utils_read "Enter your node name(not contain spaces)")
+  #   if [[ "${_node_name}" =~ \ |\' ]]; then
+  #     phala_scripts_log warn "The node name cannot contain spaces, please re-enter!" cut
+  #   else
+  #     export phala_scripts_config_input_nodename=${_node_name}
+  #     break
+  #   fi
+  # done
+  export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
 
   # set mnemonic gas_account_address
   local _mnemonic=""

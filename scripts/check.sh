@@ -110,6 +110,19 @@ function phala_scripts_check_sgxtest() {
   docker run -ti --rm --name phala-sgx_detect ${_phala_docker_device} ${phala_scripts_sgxtest_image}
 }
 
+function phala_scripts_check_envf() {
+  if [ ! -f "${phala_scripts_docker_envf}" ];then
+    phala_scripts_log warn "The node is not configured, start configuring the node!"
+    phala_scripts_config_set
+  fi
+}
+
+function phala_scripts_check_ymlf() {
+  if [ ! -f "${phala_scripts_docker_ymlf}" ] && [ ! -L "${phala_scripts_dir}/docker-compose.yml" ];then
+    phala_scripts_config_dockeryml
+  fi
+}
+
 function phala_scripts_check() {
   phala_scripts_check_system
   phala_scripts_check_kernel

@@ -43,6 +43,27 @@ phala_scripts_utils_gettext "Usage:\n"\
 return 0
 }
 
+function phala_scripts_start() {
+  phala_scripts_check_envf
+  phala_scripts_check_ymlf
+  phala_scripts_utils_docker up -d
+}
+
+function phala_scripts_stop() {
+  phala_scripts_check_envf
+  phala_scripts_check_ymlf
+  local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${1}$")
+  if [ -z "$1" ];then
+    phala_scripts_utils_docker stop
+    phala_scripts_utils_docker rm -f
+  elif [[ ! -z ${_container_name} ]];then
+    phala_scripts_utils_docker stop ${_container_name}
+    phala_scripts_utils_docker rm -f ${_container_name}
+  else
+    phala_scripts_help
+  fi
+}
+
 function phala_scripts_case() {
   [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
@@ -61,24 +82,20 @@ function phala_scripts_case() {
       printf "Phala Scripts Version: %s\n" ${phala_scripts_version}
     ;;
     start)
-        start
+      phala_scripts_start
     ;;
     presync)
-        local node_name
-        while true ; do
-            read -p "$(phala_scripts_utils_gettext 'Enter your node name (no spaces)'): " node_name
-            if [[ "$node_name" =~ \ |\' ]] || [ -z "$node_name" ]; then
-                printf "$(phala_scripts_utils_gettext The node name cannot contain spaces, please re-enter!)\n"
-            else
-                sed -i "7c NODE_NAME=$node_name" $installdir/.env
-                break
-            fi
-        done
-        cd $installdir
-        docker-compose up -d
+      if [ -f ${phala_scripts_docker_envf} ];then
+        locale phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
+        sed -i "s#NODE_NAME=.*#NODE_NAME=${phala_scripts_config_input_nodename}#g" ${phala_scripts_docker_envf}
+        phala_scripts_utils_docker up -d
+      else
+        phala_scripts_start
+      fi
     ;;
     stop)
-        stop $2
+      shift
+      phala_scripts_stop $*
     ;;
     status)
         status $2

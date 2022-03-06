@@ -65,8 +65,5 @@ function phala_scripts_utils_default() {
 }
 
 function phala_scripts_utils_docker() {
-  local env_path="${script_dir}/.env"
-  local dc_yml_path="${script_dir}/docker-compose-${}.yml"
-  local dc_cmd="docker-compose --env-file ${env_path} -f ${docker-compose_yml_path}"
-  $dc_cmd $*
+  docker-compose --env-file ${phala_scripts_docker_envf} -f ${phala_scripts_dir}/docker-compose.yml $*
 }
