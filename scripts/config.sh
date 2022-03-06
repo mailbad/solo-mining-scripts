@@ -134,7 +134,6 @@ function phala_scripts_config_set() {
       phala_scripts_log warn "Please enter an integer greater than 1 and less than %s, and your enter is incorrect, please re-enter!"  cut
     fi
   done
-  set -e
 
   # set nodename
   while true ; do
@@ -185,6 +184,8 @@ function phala_scripts_config_set() {
       break
     fi
   done
+
+  set -e
 
   # set custom datadir
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
