@@ -46,7 +46,8 @@ return 0
 function phala_scripts_case() {
   case "$1" in
     install)
-      install $2
+      # install $2
+      phala_scripts_check_dependencies
     ;;
     config)
       config $2

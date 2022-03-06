@@ -45,45 +45,22 @@ function phala_scripts_check_sgxenable() {
 
 function phala_scripts_check_dependencies(){
   # check and install
-  # _default_soft="jq curl wget unzip zip"
-  # _other_soft="docker docker-compose node"
-  _default_soft=${phala_scripts_dependencies_default_soft}
-  _other_soft=${phala_scripts_dependencies_other_soft}
-  if ! type $_default_soft >/dev/null 2>&1;then
-    phala_scripts_log info "Apt update" cut
-    # modify cn 
-    sed -i 's#http://archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
-    apt update
-    if [ $? -ne 0 ]; then
-		  phala_scripts_log error "Apt update failed."
-	  fi
-    phala_scripts_log info "Installing Apt dependencies" cut
-    apt install -y ${_default_soft}
+  # source config.sh soft
+  local _default_soft=${phala_scripts_dependencies_default_soft}
+  local _other_soft=${phala_scripts_dependencies_other_soft}
+  if type $_default_soft >/dev/null 2>&1;then
+    return 0
+  else
+    phala_scripts_install_aptdependencies ${_default_soft}
   fi
 
   if type $_other_soft > /dev/null 2>&1;then
     return 0
+  else
+    phala_scripts_install_dependencies ${_other_soft}
   fi
 
-  phala_scripts_log info "Installing other dependencies" cut
-  for _package in ${_other_soft};do
-    if ! type $_package >/dev/null 2>&1;then
-      case $_package in
-        docker|docker-compose)
-          if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
-            curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
-          fi
 
-          [ ! type docker >/dev/null 2>&1 ] && sh ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
-          apt install -y docker-compose
-        ;;
-        node)
-          curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-          apt-get install -y nodejs
-        ;;
-      esac
-    fi
-  done
 }
 
 function phala_scripts_check_sgxdevice() {
@@ -108,9 +85,10 @@ function phala_scripts_check_sgxdevice() {
   # _sgx_detect_msg=$(${_sgx_detec})
   # phala_scripts_log debug "${_sgx_detect_msg}"
   #phala_scripts_sgx_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
+  ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file}
   _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
   if [ -z "${_sgx_msg_device_path}" ];then
-    phala_scripts_log error "sgx device not found"
+    phala_scripts_log error "The driver file was not found, please check the driver installation logs!"
   fi
   
   if [ "${_sgx_msg_device_path}" == "/dev/sgx_enclave" ];then
@@ -128,6 +106,7 @@ function phala_scripts_check_sgxtest() {
   for d in ${phala_scripts_sgx_device_path[@]};do
     _phala_docker_device="${_phala_docker_device} --device ${d}"
   done
+  if [ -z "${_phala_docker_device}" ];then
   docker run -ti --rm --name phala-sgx_detect ${_phala_docker_device} ${phala_scripts_sgxtest_dockerimages}
 }
 
