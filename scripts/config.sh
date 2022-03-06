@@ -99,7 +99,7 @@ function phala_scripts_config_set() {
   if [ "$1" == "show" ];then
     phala_scripts_config_show
     return 0
-  elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];
+  elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];then
     _phala_env=DEV
   elif [ ! -z "$1" ];then
     phala_scripts_help
