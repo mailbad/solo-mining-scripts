@@ -44,6 +44,7 @@ return 0
 }
 
 function phala_scripts_case() {
+  [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install)
       # install $2
@@ -116,11 +117,13 @@ function phala_scripts_main() {
     shift
   }
 
+  # default config
+  phala_scripts_config
+  
+
   # check 
   phala_scripts_check
 
-  # config
-  phala_scripts_config
 
   phala_scripts_case $*
 

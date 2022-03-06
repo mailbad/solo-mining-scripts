@@ -18,6 +18,12 @@ phala_scripts_dependencies_other_soft=(
   docker docker-compose node
 )
 
+export phala_scripts_version \
+       phala_scripts_support_system \
+       phala_scripts_support_kernel \
+       phala_scripts_dependencies_default_soft \
+       phala_scripts_dependencies_other_soft
+
 phala_scripts_config_default() {
 
   phala_scripts_sgxtest_image=phalanetwork/phala-sgx_detect
@@ -34,8 +40,10 @@ phala_scripts_config_default() {
   phala_scripts_conf_dir="${phala_scripts_dir}/conf"
   phala_scripts_temp_dir="${phala_scripts_dir}/temp"
   phala_scripts_tmp_dir="${phala_scripts_dir}/tmp"
+  phala_scripts_log_dir="${phala_scripts_dir}/log"
   [ -d "${phala_scripts_conf_dir}" ] || mkdir ${phala_scripts_conf_dir}
   [ -d "${phala_scripts_tmp_dir}" ] || mkdir ${phala_scripts_tmp_dir}
+  [ -d "${phala_scripts_log_dir}" ] || mkdir ${phala_scripts_log_dir}
 
   phala_scripts_temp_ymlf="${phala_scripts_temp_dir}/docker-compose.yml.template"
   phala_scripts_docker_ymlf="${phala_scripts_conf_dir}/phala-docker.yml"
@@ -79,14 +87,18 @@ function phala_scripts_config_dockeryml() {
 }
 
 function phala_scripts_config_show() {
-    :
+    cat ${phala_scripts_docker_envf}
 }
 
 function phala_scripts_config_set() {
   if [ "$1" == "show" ];then
     phala_scripts_config_show
     return 0
+  elif [ ! -z "$1" ];then
+    phala_scripts_help
+    return 1
   fi
+  
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
@@ -189,14 +201,12 @@ function phala_scripts_config_set() {
   fi
   ln -s ${phala_scripts_docker_envf} ${phala_scripts_dir}/.env
 
-}
+  # run config docker-compose.yml update sgx device
+  phala_scripts_config_dockeryml
 
-function phala_scripts_config_init() {
-    :
 }
-
 
 function phala_scripts_config() {
   phala_scripts_config_default
-  phala_scripts_config_dockeryml
+  
 }

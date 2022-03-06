@@ -96,6 +96,7 @@ function phala_scripts_check_sgxdevice() {
   else
     phala_scripts_sgx_device_path=${_sgx_msg_device_path}
   fi
+  rm -f ${_sgx_msg_file}
   export phala_scripts_sgx_device_path
 }
 
@@ -113,5 +114,4 @@ function phala_scripts_check() {
   phala_scripts_check_system
   phala_scripts_check_kernel
   phala_scripts_check_sgxenable
-  phala_scripts_check_dependencies
 }
