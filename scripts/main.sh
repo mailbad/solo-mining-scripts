@@ -101,7 +101,7 @@ function phala_scripts_case() {
     ;;
     presync)
       if [ -f ${phala_scripts_docker_envf} ];then
-        locale phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
+        local phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
         sed -i "s#NODE_NAME=.*#NODE_NAME=${phala_scripts_config_input_nodename}#g" ${phala_scripts_docker_envf}
         phala_scripts_utils_docker up -d
       else
