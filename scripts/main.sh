@@ -11,6 +11,8 @@
 function phala_scripts_help(){
 # "		<dcap>				install DCAP driver\n"\
 # "		<isgx>				install isgx driver\n"\
+# "	score-test\n"\
+# "		<Parameter>			get the scores of your machine"
 phala_scripts_utils_gettext "Usage:\n"\
 "	phala [OPTION]...\n"\
 "\n"\
@@ -38,8 +40,6 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<pherry>			print phala-pherry logs information\n"\
 "		<bench>				print phala-pruntime-bench logs information\n"\
 "	sgx-test				start the mining test program\n"\
-"	score-test\n"\
-"		<Parameter>			get the scores of your machine"
 return 0
 }
 
