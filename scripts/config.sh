@@ -27,7 +27,7 @@ phala_scripts_temp_ymlf="${phala_scripts_conf_dir}/docker-compose.yml.template"
 phala_scripts_docker_ymlf="${phala_scripts_conf_dir}/phala-docker.yml"
 
 
-function phala_scripts_config_sgxdevice() {
+function phala_scripts_config_dockeryml() {
   # check and install
   phala_scripts_check_sgxdevice
   local _phala_docker_yml=""
@@ -53,5 +53,5 @@ function phala_scripts_config_init() {
 
 
 function phala_scripts_config() {
-  phala_scripts_config_sgxdevice
+  phala_scripts_config_dockeryml
 }
