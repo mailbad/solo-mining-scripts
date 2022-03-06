@@ -31,10 +31,11 @@ function phala_scripts_install_otherdependencies(){
         case $_package in
           docker)
             apt autoremove -y docker-ce
+            find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
           ;;
           node)
-            find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
             apt autoremove -y nodejs
+            find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
           ;;
           *)
             apt autoremove -y $_package
@@ -51,11 +52,15 @@ function phala_scripts_install_otherdependencies(){
     if ! type $_package >/dev/null 2>&1;then
       case $_package in
         docker|docker-compose)
+          find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
           if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
             curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
           fi
 
-          [ ! type docker >/dev/null 2>&1 ] && sh ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+          [ ! type docker >/dev/null 2>&1 ] && {
+            sh ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+            systemctl start docker
+          }
           apt install -y docker-compose
         ;;
         node)
