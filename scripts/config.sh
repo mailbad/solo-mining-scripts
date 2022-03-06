@@ -95,7 +95,7 @@ function phala_scripts_config_show() {
 }
 
 function phala_scripts_config_set() {
-  locale _phala_env=PRO
+  local _phala_env=PRO
   if [ "$1" == "show" ];then
     phala_scripts_config_show
     return 0
