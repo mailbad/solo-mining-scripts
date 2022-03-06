@@ -156,7 +156,6 @@ function phala_scripts_config_set() {
       phala_scripts_log warn "The node name cannot contain spaces, please re-enter!" cut
     else
       export phala_scripts_config_input_nodename=${_node_name}
-      # sed -i "7c NODE_NAME=$node_name" $installdir/.env
       break
     fi
   done
@@ -177,8 +176,6 @@ function phala_scripts_config_set() {
       if [ `echo "$_balance > 0.1"|bc` -eq 1 ]; then
         export phala_scripts_config_input_mnemonic=${_mnemonic}
         export phala_scripts_config_gas_account_address=${_gas_adress}
-        # sed -i "8c MNEMONIC=$mnemonic" $installdir/.env
-        # sed -i "9c GAS_ACCOUNT_ADDRESS=$gas_adress" $installdir/.env
         break
       else
         phala_scripts_log warn "Account PHA is less than 0.1!" cut
@@ -194,7 +191,6 @@ function phala_scripts_config_set() {
       phala_scripts_log warn "Please enter a legal pool address, and it cannot be empty!"
     else
       export phala_scripts_config_input_operator=${_pool_addr}
-      # sed -i "10c OPERATOR=$pool_addr" $installdir/.env
       break
     fi
   done

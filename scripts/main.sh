@@ -49,14 +49,18 @@ function phala_scripts_case() {
     install)
       # install $2
       phala_scripts_check_dependencies
+      shift
+      phala_scripts_config_set $*
     ;;
     config)
       # config $2
       shift
       phala_scripts_config_set $*
     ;;
+    version)
+      printf "Phala Scripts Version: %s" ${phala_scripts_version}
+    ;;
     start)
-        check_version
         start
     ;;
     presync)
