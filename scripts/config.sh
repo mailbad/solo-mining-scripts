@@ -203,7 +203,7 @@ function phala_scripts_config_set() {
       -e "s#GAS_ACCOUNT_ADDRESS=.*#GAS_ACCOUNT_ADDRESS=${phala_scripts_config_gas_account_address}#g" \
       -e "s#OPERATOR=.*#OPERATOR=${phala_scripts_config_input_operator}#g" \
       -e "s#phala_template_data_value#${khala_data_path_default}#g" \
-      -e "s#PHALA_ENV=.*#PHALA_ENV=_phala_env}#g" \
+      -e "s#PHALA_ENV=.*#PHALA_ENV=${_phala_env}#g" \
       ${phala_scripts_temp_envf} > ${phala_scripts_docker_envf}
 
   if [ -f "${phala_scripts_dir}/.env" ] && [ -L "${phala_scripts_dir}/.env" ];then
