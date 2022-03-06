@@ -58,6 +58,7 @@ function phala_scripts_install_otherdependencies(){
           apt install -y docker-compose
         ;;
         node)
+          find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
           curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
           apt-get install -y nodejs
         ;;
