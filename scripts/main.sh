@@ -68,6 +68,13 @@ function phala_scripts_stop_logs() {
   fi
 }
 
+function phala_scripts_uninstall() {
+  phala_scripts_install_aptdependencies uninstall "${phala_scripts_dependencies_default_soft[@]}"
+  phala_scripts_install_otherdependencies uninstall "${phala_scripts_dependencies_other_soft[@]}"
+  phala_scripts_install_sgx uninstall
+  phala_scripts_log info "Uninstall phala node sucess" cut
+}
+
 function phala_scripts_case() {
   [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
@@ -110,7 +117,10 @@ function phala_scripts_case() {
       phala_scripts_stop_logs $*
     ;;
     uninstall)
-        uninstall
+      set +e
+      phala_scripts_stop_logs stop > /dev/null 2>&1
+      set -e
+      phala_scripts_uninstall
     ;;
     sgx-test)
       phala_scripts_check_sgxtest

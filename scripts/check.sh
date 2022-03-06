@@ -46,18 +46,18 @@ function phala_scripts_check_sgxenable() {
 function phala_scripts_check_dependencies(){
   # check and install
   # source config.sh soft
-  local _default_soft=${phala_scripts_dependencies_default_soft}
-  local _other_soft=${phala_scripts_dependencies_other_soft}
+  local _default_soft=${phala_scripts_dependencies_default_soft[@]}
+  local _other_soft=${phala_scripts_dependencies_other_soft[@]}
   if type $_default_soft >/dev/null 2>&1;then
     return 0
   else
-    phala_scripts_install_aptdependencies ${_default_soft}
+    phala_scripts_install_aptdependencies "${_default_soft[@]}"
   fi
 
   if type $_other_soft > /dev/null 2>&1;then
     return 0
   else
-    phala_scripts_install_dependencies ${_other_soft}
+    phala_scripts_install_otherdependencies "${_other_soft[@]}"
   fi
 
 

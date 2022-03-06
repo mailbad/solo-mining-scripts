@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 function phala_scripts_install_aptdependencies() {
+  if [ "$1" == "uninstall" ];then
+    shift
+    phala_scripts_log info "Uninstall Apt dependencies" cut
+    apt autoremove -y $*
+    return 0
+  fi
+
   _default_soft=$*
   phala_scripts_log info "Apt update" cut
   # modify cn 
@@ -10,10 +17,33 @@ function phala_scripts_install_aptdependencies() {
     phala_scripts_log error "Apt update failed."
   fi
   phala_scripts_log info "Installing Apt dependencies" cut
-  apt install -y ${_default_soft}
+  apt install -y ${_default_soft[@]}
 }
 
 function phala_scripts_install_otherdependencies(){
+  if [ "$1" == "uninstall" ];then
+    shift
+    phala_scripts_log info "Uninstall other dependencies" cut
+    for _package in $*;do
+      if ! type $_package > /dev/null 2>&1;then
+        :
+      else
+        case $_package in
+          docker)
+            apt autoremove -y docker-ce
+          ;;
+          node)
+            apt autoremove -y nodejs
+          ;;
+          *)
+            apt autoremove -y $_package
+          ;;
+        esac
+      fi
+    done
+    return 0
+  fi
+
   _other_soft=$*
   phala_scripts_log info "Installing other dependencies" cut
   for _package in ${_other_soft};do
@@ -38,6 +68,13 @@ function phala_scripts_install_otherdependencies(){
 
 function phala_scripts_install_sgx() {
   _kernel_version=$(uname -r)
+  if [ "$1" == "uninstall" ];then
+    shift
+    phala_scripts_log info "Uninstall Install Sgx device" cut
+    apt autoremove -y libsgx-enclave-common sgx-aesm-service
+    [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
+    return 0
+  fi
   phala_scripts_log info "Kernel ${_kernel_version}" cut
   phala_scripts_log info "Install Sgx device"
   if [[ "${_kernel_version}" =~ "5.13" ]];then
