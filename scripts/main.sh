@@ -50,7 +50,9 @@ function phala_scripts_case() {
       phala_scripts_check_dependencies
     ;;
     config)
-      config $2
+      # config $2
+      shift
+      phala_scripts_config_set $*
     ;;
     start)
         check_version

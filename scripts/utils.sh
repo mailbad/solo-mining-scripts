@@ -22,6 +22,20 @@ function phala_scripts_utils_gettext() {
   gettext -se "$*"
 }
 
+function phala_scripts_utils_read() {
+  local _read_msg=$(phala_scripts_utils_gettext "$1")
+  local _read_input
+  if [ ! -z "$2" ];then
+    local _default_msg="$2"
+    read -p "${_read_msg} (Default: ${_default_msg}): " _read_input
+  else
+    while [ -z "${_read_input}" ];do
+      read -p "${_read_msg}: " _read_input
+    done
+  fi
+  echo $_read_input
+}
+
 function _echo_c() {
   if [ "$shell_name" != "bash" ] || [[ "$2" =~ "%" ]];then
     [ -z "$_phala_scripts_utils_printf_value" ] && _phala_scripts_utils_printf_value=""

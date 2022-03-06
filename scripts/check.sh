@@ -106,8 +106,7 @@ function phala_scripts_check_sgxtest() {
   for d in ${phala_scripts_sgx_device_path[@]};do
     _phala_docker_device="${_phala_docker_device} --device ${d}"
   done
-  if [ -z "${_phala_docker_device}" ];then
-  docker run -ti --rm --name phala-sgx_detect ${_phala_docker_device} ${phala_scripts_sgxtest_dockerimages}
+  docker run -ti --rm --name phala-sgx_detect ${_phala_docker_device} ${phala_scripts_sgxtest_image}
 }
 
 function phala_scripts_check() {
