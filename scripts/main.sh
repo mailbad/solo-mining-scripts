@@ -79,6 +79,7 @@ function phala_scripts_uninstall() {
 }
 
 function phala_scripts_case() {
+  [ -L "/usr/local/bin/phala" ] || ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
   [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install)
