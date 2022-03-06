@@ -39,7 +39,7 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<pruntime>			print phala-pruntime logs information\n"\
 "		<pherry>			print phala-pherry logs information\n"\
 "		<bench>				print phala-pruntime-bench logs information\n"\
-"	sgx-test				start the mining test program\n"\
+"	sgx-test				start the mining test program\n"
 return 0
 }
 
