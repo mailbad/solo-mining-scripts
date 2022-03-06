@@ -16,6 +16,8 @@ phala_scripts_dependencies_other_soft=(
   docker docker-compose node
 )
 
+phala_scripts_sgxtest_dockerimages="phalanetwork/phala-sgx_detect"
+
 phala_scripts_tools_dir="${phala_scripts_dir}/tools"
 phala_scripts_conf_dir="${phala_scripts_dir}/conf"
 phala_scripts_tmp_dir="${phala_scripts_dir}/tmp"
@@ -42,13 +44,13 @@ function phala_scripts_config_show() {
 }
 
 function phala_scripts_config_set() {
-  #sed "s#phala_template_value#/dev/sgx_enclave:/dev/sgx/enclave\n    - /dev/sgx_provision:/dev/sgx/provision#g" docker-compose.yml.template
     :
 }
 
 function phala_scripts_config_init() {
     :
 }
+
 
 function phala_scripts_config() {
   phala_scripts_config_sgxdevice

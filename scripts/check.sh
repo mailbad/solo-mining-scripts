@@ -121,10 +121,19 @@ function phala_scripts_check_sgxdevice() {
   export phala_scripts_sgx_device_path
 }
 
+function phala_scripts_check_sgxtest() {
+  # check device and get device_path
+  phala_scripts_check_sgxdevice
+  _phala_docker_device=""
+  for d in ${phala_scripts_sgx_device_path[@]};do
+    _phala_docker_device="${_phala_docker_device} --device ${d}"
+  done
+  docker run -ti --rm --name phala-sgx_detect ${_phala_docker_device} ${phala_scripts_sgxtest_dockerimages}
+}
+
 function phala_scripts_check() {
   phala_scripts_check_system
   phala_scripts_check_kernel
   phala_scripts_check_sgxenable
   phala_scripts_check_dependencies
-  
 }

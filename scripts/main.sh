@@ -85,7 +85,7 @@ function phala_scripts_case() {
         uninstall
     ;;
     sgx-test)
-        sgx_test
+      phala_scripts_check_sgxtest
     ;;
     *)
         phala_scripts_help
