@@ -37,7 +37,7 @@ function phala_scripts_check_kernel() {
 
 function phala_scripts_check_sgxenable() {
   _sgx_enable=${phala_scripts_tools_dir}/sgx_enable
-  if ! $($_sgx_enable -s|grep -i 'already enabled' >/dev/null 2>&1);then
+  if ! $($_sgx_enable -s 2>/dev/null |grep -i 'already enabled' >/dev/null 2>&1);then
     export _phala_scripts_utils_printf_value="$_sgx_enable"
     phala_scripts_log error "Please first run [ sudo %s ]!" 
   fi
