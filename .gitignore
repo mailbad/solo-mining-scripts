@@ -1,5 +1,6 @@
 tmp/
 conf/
+log/
 locale/
 /tools/sgx-detect
 backup/

@@ -9,14 +9,14 @@
 
 
 function phala_scripts_help(){
+# "		<dcap>				install DCAP driver\n"\
+# "		<isgx>				install isgx driver\n"\
 phala_scripts_utils_gettext "Usage:\n"\
 "	phala [OPTION]...\n"\
 "\n"\
 "Options:\n"\
 "	help					display help information\n"\
 "	install					install your phala node\n"\
-"		<dcap>				install DCAP driver\n"\
-"		<isgx>				install isgx driver\n"\
 "	uninstall				uninstall your phala scripts\n"\
 "	start					start mining\n"\
 "		<khala>				start khala-node\n"\
@@ -123,7 +123,6 @@ function phala_scripts_main() {
 
   # default config
   phala_scripts_config
-  
 
   # check 
   phala_scripts_check

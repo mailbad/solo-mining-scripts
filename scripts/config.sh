@@ -11,7 +11,7 @@ phala_scripts_support_kernel=(
 )
 
 phala_scripts_dependencies_default_soft=(
-  jq curl wget unzip zip
+  jq curl wget unzip zip gettext
 )
 
 phala_scripts_dependencies_other_soft=(
