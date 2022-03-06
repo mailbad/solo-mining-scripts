@@ -116,7 +116,7 @@ function phala_scripts_case() {
       phala_scripts_check_sgxtest
     ;;
     *)
-        phala_scripts_help
+      phala_scripts_help
     ;;
   esac
 }

@@ -214,6 +214,7 @@ function phala_scripts_config_set() {
   # set custom datadir
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
+  khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${PHALA_ENV}|tr A-Z a-z)"
   # save conf as env file
   sed -e "s#NODE_IMAGE=.*#NODE_IMAGE=${phala_node_image}#g" \
       -e "s#PRUNTIME_IMAGE=.*#PRUNTIME_IMAGE=${phala_pruntime_image}#g" \
