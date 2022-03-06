@@ -28,6 +28,7 @@ function phala_scripts_utils_read() {
   if [ ! -z "$2" ];then
     local _default_msg="$2"
     read -p "${_read_msg} (Default: ${_default_msg}): " _read_input
+    [ -z "${_read_input}" ] && _read_input=${_default_msg}
   else
     while [ -z "${_read_input}" ];do
       read -p "${_read_msg}: " _read_input

@@ -18,26 +18,46 @@ phala_scripts_dependencies_other_soft=(
   docker docker-compose node
 )
 
-#
-phala_scripts_sgxtest_image=phalanetwork/phala-sgx_detect
-phala_node_image=phalanetwork/khala-node
-phala_node_dev_image=phalanetwork/khala-pt3-node
-phala_pruntime_image=phalanetwork/phala-pruntime
-phala_pherry_image=phalanetwork/phala-pherry
+phala_scripts_config_default() {
 
-phala_scripts_public_ws="wss://khala.api.onfinality.io/public-ws"
+  phala_scripts_sgxtest_image=phalanetwork/phala-sgx_detect
+  phala_node_image=phalanetwork/khala-node
+  phala_node_dev_image=phalanetwork/khala-pt3-node
+  phala_pruntime_image=phalanetwork/phala-pruntime
+  phala_pherry_image=phalanetwork/phala-pherry
 
-khala_data_path_default="/var/khala"
+  phala_scripts_public_ws="wss://khala.api.onfinality.io/public-ws"
 
-phala_scripts_tools_dir="${phala_scripts_dir}/tools"
-phala_scripts_conf_dir="${phala_scripts_dir}/conf"
-phala_scripts_tmp_dir="${phala_scripts_dir}/tmp"
-[ -d "${phala_scripts_tmp_dir}" ] || mkdir ${phala_scripts_tmp_dir}
+  khala_data_path_default="/var/khala"
 
-phala_scripts_temp_ymlf="${phala_scripts_conf_dir}/docker-compose.yml.template"
-phala_scripts_docker_ymlf="${phala_scripts_conf_dir}/phala-docker.yml"
-phala_scripts_temp_envf="${phala_scripts_conf_dir}/phala-env.template"
-phala_scripts_docker_envf="${phala_scripts_conf_dir}/phala-env"
+  phala_scripts_tools_dir="${phala_scripts_dir}/tools"
+  phala_scripts_conf_dir="${phala_scripts_dir}/conf"
+  phala_scripts_temp_dir="${phala_scripts_dir}/temp"
+  phala_scripts_tmp_dir="${phala_scripts_dir}/tmp"
+  [ -d "${phala_scripts_conf_dir}" ] || mkdir ${phala_scripts_conf_dir}
+  [ -d "${phala_scripts_tmp_dir}" ] || mkdir ${phala_scripts_tmp_dir}
+
+  phala_scripts_temp_ymlf="${phala_scripts_temp_dir}/docker-compose.yml.template"
+  phala_scripts_docker_ymlf="${phala_scripts_conf_dir}/phala-docker.yml"
+  phala_scripts_temp_envf="${phala_scripts_temp_dir}/phala-env.template"
+  phala_scripts_docker_envf="${phala_scripts_conf_dir}/phala-env"
+  
+  export phala_scripts_sgxtest_image \
+         phala_node_image \
+         phala_node_dev_image \
+         phala_pruntime_image \
+         phala_pherry_image \
+         phala_scripts_public_ws \
+         khala_data_path_default \
+         phala_scripts_tools_dir \
+         phala_scripts_conf_dir \
+         phala_scripts_temp_dir \
+         phala_scripts_tmp_dir \
+         phala_scripts_temp_ymlf \
+         phala_scripts_docker_ymlf \
+         phala_scripts_temp_envf \
+         phala_scripts_docker_envf
+}
 
 function phala_scripts_config_dockeryml() {
   # check and install
@@ -177,5 +197,6 @@ function phala_scripts_config_init() {
 
 
 function phala_scripts_config() {
+  phala_scripts_config_default
   phala_scripts_config_dockeryml
 }
