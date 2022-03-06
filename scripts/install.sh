@@ -58,14 +58,17 @@ function phala_scripts_install_otherdependencies(){
           fi
 
           [ ! type docker >/dev/null 2>&1 ] && {
-            sh ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+            bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
             systemctl start docker
           }
           apt install -y docker-compose
         ;;
         node)
           find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
-          curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+          if [ !-f "${phala_scripts_tools_dir}/get-node.sh" ];then
+            curl -fsSL https://deb.nodesource.com/setup_lts.x -o ${phala_scripts_tools_dir}/get-node.sh
+          fi
+          bash ${phala_scripts_tools_dir}/get-node.sh
           apt-get install -y nodejs
         ;;
       esac

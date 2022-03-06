@@ -3,4 +3,6 @@ conf/
 log/
 locale/
 /tools/sgx-detect
+/tools/get-node.sh
+/tools/get-docker.sh
 backup/
