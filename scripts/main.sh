@@ -5,6 +5,7 @@
 . ${phala_scripts_dir}/scripts/log.sh
 . ${phala_scripts_dir}/scripts/config.sh
 . ${phala_scripts_dir}/scripts/check.sh
+. ${phala_scripts_dir}/scripts/install.sh
 
 
 function phala_scripts_help(){
@@ -99,15 +100,25 @@ function phala_scripts_main() {
   printf "\033[0;31m Cannot run driectly \033[0m\n"
     exit 1
   fi
-  phala_scripts_tools_dir="${phala_scripts_dir}/tools"
-  phala_scripts_conf_dir="${phala_scripts_dir}/conf"
+
   # set locale lange
   phala_scripts_utils_setlocale
 
-  # check 
-  phala_scripts_check
   
   # run main case
+  [ "$1" == "debug" ] && {
+    # open shell debug
+    set -x
+    # shift OPTION
+    shift
+  }
+
+  # check 
+  phala_scripts_check
+
+  # config
+  phala_scripts_config
+
   phala_scripts_case $*
 
 }

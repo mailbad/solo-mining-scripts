@@ -25,7 +25,7 @@ services:
    hostname: phala-pruntime
    ports:
     - "8000:8000"
-   devices: ${SGX_DEVICES}
+   devices:phala_template_value
 
    restart: always
    environment:

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function phala_script_checks_support() {
+function phala_scripts_checks_support() {
   _support_msg="\n\nSystem:\t"
   local IFS=$','
   for s in ${phala_scripts_support_system[@]}; do
@@ -19,7 +19,7 @@ function phala_scripts_check_system() {
     [[ "${phala_scripts_support_system[@]}" =~ "${DISTRIB_ID} ${DISTRIB_RELEASE}" ]] && _system_check=true
   fi
   if [ -z "$_system_check" ];then
-    _phala_scripts_utils_printf_value="$(phala_script_checks_support)"
+    _phala_scripts_utils_printf_value="$(phala_scripts_checks_support)"
     phala_scripts_log error "Unsupported system! %s" cut
     return 1
   fi
@@ -29,7 +29,7 @@ function phala_scripts_check_kernel() {
   if [[ "${phala_scripts_support_kernel[@]}" =~ "$(uname -r|cut -d '.' -f1,2 2>/dev/null)" ]];then
     :
   else
-    _phala_scripts_utils_printf_value="$(phala_script_checks_support)"
+    _phala_scripts_utils_printf_value="$(phala_scripts_checks_support)"
     phala_scripts_log error "Unsupported Kernel! %s" cut
     return 1
   fi
@@ -44,10 +44,15 @@ function phala_scripts_check_sgxenable() {
 }
 
 function phala_scripts_check_dependencies(){
-  _default_soft="jq curl wget unzip zip"
-  _other_soft="docker docker-compose node"
+  # check and install
+  # _default_soft="jq curl wget unzip zip"
+  # _other_soft="docker docker-compose node"
+  _default_soft=${phala_scripts_dependencies_default_soft}
+  _other_soft=${phala_scripts_dependencies_other_soft}
   if ! type $_default_soft >/dev/null 2>&1;then
     phala_scripts_log info "Apt update" cut
+    # modify cn 
+    sed -i 's#http://archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
     apt update
     if [ $? -ne 0 ]; then
 		  phala_scripts_log error "Apt update failed."
@@ -68,7 +73,8 @@ function phala_scripts_check_dependencies(){
           if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
             curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
           fi
-          sh get-docker.sh --mirror Aliyun
+
+          [ ! type docker >/dev/null 2>&1 ] && sh ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
           apt install -y docker-compose
         ;;
         node)
@@ -80,9 +86,45 @@ function phala_scripts_check_dependencies(){
   done
 }
 
+function phala_scripts_check_sgxdevice() {
+  _sgx_msg_file=${phala_scripts_tmp_dir}/sgx-detect.msg
+  ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file}
+  _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
+  _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
+  _sgx_aems_service=$(awk '/AESM service/ {print $1}' ${_sgx_msg_file})
+  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ];then
+    :
+  else
+    # install
+    phala_scripts_install_sgx
+  fi
+
+  if [ "${_sgx_aems_service}" == "yes" ];then
+    :
+  else
+    dpkg --list|grep -i sgx-aesm-service >/dev/null 2>&1
+    [ $? -eq 0 ] && systemctl start aesmd || phala_scripts_install_sgx
+  fi
+  # _sgx_detect_msg=$(${_sgx_detec})
+  # phala_scripts_log debug "${_sgx_detect_msg}"
+  #phala_scripts_sgx_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
+  _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
+  if [ -z "${_sgx_msg_device_path}" ];then
+    phala_scripts_log error "sgx device not found"
+  fi
+  
+  if [ "${_sgx_msg_device_path}" == "/dev/sgx_enclave" ];then
+    phala_scripts_sgx_device_path=(/dev/sgx_enclave:/var/sgx/encalave /dev/sgx_provision:/var/sgx/provision)
+  else
+    phala_scripts_sgx_device_path=${_sgx_msg_device_path}
+  fi
+  export phala_scripts_sgx_device_path
+}
+
 function phala_scripts_check() {
   phala_scripts_check_system
   phala_scripts_check_kernel
   phala_scripts_check_sgxenable
   phala_scripts_check_dependencies
+  
 }
