@@ -16,15 +16,24 @@ function phala_scripts_trap() {
 function phala_scripts_utils_setlocale() {
   export TEXTDOMAINDIR=${phala_scripts_dir}/locale
   export TEXTDOMAIN=phala
+  case "${PHALA_LANG}" in
+    CN)
+      if $(localectl list-locales 2>/dev/null |grep -i zh_CN >/dev/null 2>&1);then
+        :
+      else
+        sudo apt -y  install language-pack-zh-hans
+      fi
+      export LANG="zh_CN.UTF-8"
+    ;;
+    US)
+      export LANG="en_US.UTF-8"
+    ;;
+    *)
+      export LANG="en_US.UTF-8"
+    ;;
+  esac 
   
   if [[ "$LANG" =~ "en" ]] || [[ "$LANG" =~ "zh" ]];then
-    # test run
-    if $(localectl list-locales 2>/dev/null |grep -i zh_CN >/dev/null 2>&1);then
-      export LANG="zh_CN.UTF-8"
-    else
-      # sudo apt -y  install language-pack-zh-hans
-      :
-    fi
     :
   else
     export LANG="en_US.UTF-8"

@@ -186,11 +186,11 @@ function phala_scripts_main() {
     shift
   }
 
+  # default config [ first run ]
+  phala_scripts_config
+
   # set locale lange
   phala_scripts_utils_setlocale
-
-  # default config
-  phala_scripts_config
 
   # check 
   phala_scripts_check
