@@ -40,7 +40,7 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<pherry>			print phala-pherry logs information\n"\
 "		<bench>				print phala-pruntime-bench logs information\n"\
 "	sgx-test				start the mining test program\n"
-return 0
+
 }
 
 function phala_scripts_start() {
@@ -63,6 +63,10 @@ function phala_scripts_stop_logs() {
     phala_scripts_utils_docker logs -f
   elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
     phala_scripts_utils_docker logs -f ${_container_name}
+  elif [ -z "$2" ] && [ "$1" == "ps" ];then
+    phala_scripts_utils_docker ps
+  elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
+    phala_scripts_utils_docker ps ${_container_name}
   else
     phala_scripts_help
   fi
@@ -78,9 +82,27 @@ function phala_scripts_uninstall() {
   phala_scripts_log info "Uninstall phala node sucess" cut
 }
 
+function phala_scripts_clear_logs() {
+  local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${1}$")
+  if [ -z "$1" ];then
+    _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf})
+  elif [ ! -z "${_container_name}" ];then
+    :
+  else
+    phala_scripts_help
+    return 1
+  fi
+
+  for _cname in ${_container_name[@]};do
+    _phala_scripts_utils_printf_value="${_cname}"
+    phala_scripts_log info "clear [ %s ] log." cut
+    truncate -s 0 $(docker inspect --format='{{.LogPath}}' ${_cname});
+  done
+}
+
 function phala_scripts_case() {
   [ -L "/usr/local/bin/phala" ] || ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
-  [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
+  [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install)
       # install $2
@@ -117,9 +139,15 @@ function phala_scripts_case() {
     update)
         update $2
     ;;
-    logs)
+    logs|ps)
       set +e
-      phala_scripts_stop_logs $*
+      if [ "$1" == "logs" ] && [ "$2" == "clear" ];then
+        shift
+        shift
+        phala_scripts_clear_logs $*
+      else
+        phala_scripts_stop_logs $*
+      fi
       set -e
     ;;
     uninstall)
