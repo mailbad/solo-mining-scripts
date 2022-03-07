@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[ -z "${script_dir}" ] && script_dir=$(cd $(dirname $0);pwd)
+[ -z "${phala_scripts_dir}" ] && phala_scripts_dir=$(cd $(dirname $0);pwd)
 
 # source inf
 # . utils.sh
@@ -24,7 +24,7 @@ function phala_scripts_log() {
   local logtype=$(echo $1|tr a-z A-Z)
   local msg=$(phala_scripts_utils_gettext $2)
   [ ! -z $3 ] && local msg="\n${msg}"
-  local source_path=$(caller 0 |sed "s#${script_dir}#.#g"|awk '{print $3":"$1}')
+  local source_path=$(caller 0 |sed "s#${phala_scripts_dir}#.#g"|awk '{print $3":"$1}')
   local logformat="[${datetime}\t${logtype}\t${source_path}]\t${msg}"
   [ ! -z $3 ] && local logformat="----------------------------------------------------------------------------------------------------\n${logformat}\n----------------------------------------------------------------------------------------------------" 
 
@@ -43,6 +43,9 @@ function phala_scripts_log() {
       [[ $loglevel -le 3 ]] && phala_scripts_utils_red ${logformat}
     ;;
   esac
-  [ $logtype == "ERROR" ] && return 1 || return 0
+  [ $logtype == "ERROR" ] && {
+    export _phala_scripts_error_trap=false
+    return 1 
+  } || return 0
 
 }

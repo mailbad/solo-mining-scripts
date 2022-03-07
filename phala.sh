@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# Error Quit
-set -e
 
 # check script dir
 # other system readlink -f [False]
