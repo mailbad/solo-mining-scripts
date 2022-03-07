@@ -2,7 +2,7 @@
 
 phala_scripts_status_msg(){
 phala_scripts_utils_gettext "Phala Status:\n"\
-"----------------------------------------------- Script version %s ---------------------------------------------\n"\
+"----------------------------------------------- Script version %s [ %s ] --------------------------------------\n"\
 "	service name		service status			local node block height\n"\
 "------------------------------------------------------------------------------------------------------------------\n"\
 "	khala-node			%s				%s / %s\n"\
@@ -34,13 +34,13 @@ phala_scripts_utils_gettext "Phala Status:\n"\
 }
 
 function phala_scripts_status_khala() {
-  # node ${phala_scripts_tools_dir}/console.js --substrate-ws-endpoint "${phala_scripts_public_ws}" chain $* 2>/dev/null
-  [ $1 == "free-balance" ] && echo 1000000000000000 || echo currentBlock: 10000000
+  node ${phala_scripts_tools_dir}/console.js --substrate-ws-endpoint "${phala_scripts_public_ws}" chain $* 2>/dev/null
+  # [ $1 == "free-balance" ] && echo 1000000000000000 || echo currentBlock: 10000000
 }
 
 function phala_scripts_status_kusama() {
-  # node ${phala_scripts_tools_dir}/console.js --substrate-ws-endpoint "${phala_scripts_kusama_ws}" chain sync-state 2>/dev/null
-  echo currentBlock: 10000000
+  node ${phala_scripts_tools_dir}/console.js --substrate-ws-endpoint "${phala_scripts_kusama_ws}" chain sync-state 2>/dev/null
+  # echo currentBlock: 10000000
 }
 
 function phala_scripts_status(){
@@ -76,7 +76,7 @@ function phala_scripts_status(){
   done
 
   if [ $(echo "${balance} < 2"|bc) -eq 1 ]; then
-    local balance_msg=$(phala_scripts_utils_gettext "Insufficient balance！")
+    local balance_msg=$(phala_scripts_utils_gettext "Insufficient balance!")
     gas_balance="${balance} PHA $(phala_scripts_utils_red ${balance_msg})"
   else
     gas_balance="$(phala_scripts_utils_green ${balance}) PHA"
@@ -109,7 +109,7 @@ function phala_scripts_status(){
 
   clear
   printf "\r$(phala_scripts_status_msg)\n" \
-        "${phala_scripts_version}" \
+        "${phala_scripts_version}" "${PHALA_ENV}"\
         "${node_status}" "${khala_node_block}" "${khala_head_block}" \
         "${node_status}" "${kusama_node_block}" "${kusama_head_block}" \
         "${pruntime_status}" \

@@ -189,11 +189,9 @@ function phala_scripts_main() {
 
   # default config
   phala_scripts_config
-  [ -f "${phala_scripts_docker_envf}" ] && export $(sed '/MNEMONIC=/d' ${phala_scripts_docker_envf})
 
   # check 
   phala_scripts_check
-
 
   phala_scripts_case $*
 

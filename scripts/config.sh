@@ -55,6 +55,13 @@ phala_scripts_config_default() {
   phala_scripts_docker_ymlf="${phala_scripts_conf_dir}/phala-docker.yml"
   phala_scripts_temp_envf="${phala_scripts_temp_dir}/phala-env.template"
   phala_scripts_docker_envf="${phala_scripts_conf_dir}/phala-env"
+
+  # source env
+  [ -f "${phala_scripts_docker_envf}" ] && export $(sed '/MNEMONIC=/d' ${phala_scripts_docker_envf})
+  [ "${PHALA_ENV}" == "DEV" ] && {
+    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+    phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
+  }
   
   export phala_scripts_sgxtest_image \
          phala_node_image \
