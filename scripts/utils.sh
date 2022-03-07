@@ -1,5 +1,18 @@
 #!/usr/bin/env bash
 
+function phala_scripts_trap() {
+  local _quit_code=$?
+  [ ${_quit_code} -eq 0 ] && return 0
+  if [ "${_phala_scripts_error_trap}" != "false" ];then
+    local source_path=$(caller 0 |awk '{print $2}')
+    export _phala_scripts_utils_printf_value="${source_path}" 
+    local _trap_msg=$(phala_scripts_utils_gettext "\t [ %s ]\t unknown error!")
+    local _trap_msg="----------------------------------------------------------------------------------------------------\n${_trap_msg}\n----------------------------------------------------------------------------------------------------" 
+    phala_scripts_utils_red ${_trap_msg}
+  fi
+  return ${_quit_code}
+}
+
 function phala_scripts_utils_setlocale() {
   export TEXTDOMAINDIR=${phala_scripts_dir}/locale
   export TEXTDOMAIN=phala

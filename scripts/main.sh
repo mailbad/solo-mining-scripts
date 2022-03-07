@@ -7,23 +7,6 @@
 . ${phala_scripts_dir}/scripts/check.sh
 . ${phala_scripts_dir}/scripts/install.sh
 
-# quit msg
-trap "phala_scripts_trap" EXIT
-export _phala_scripts_error_trap=true
-
-function phala_scripts_trap() {
-  local _quit_code=$?
-  [ ${_quit_code} -eq 0 ] && return 0
-  if [ "${_phala_scripts_error_trap}" != "false" ];then
-    local source_path=$(caller 0 |awk '{print $2}')
-    export _phala_scripts_utils_printf_value="${source_path}" 
-    local _trap_msg=$(phala_scripts_utils_gettext "\t [ %s ]\t unknown error!")
-    local _trap_msg="----------------------------------------------------------------------------------------------------\n${_trap_msg}\n----------------------------------------------------------------------------------------------------" 
-    phala_scripts_utils_red ${_trap_msg}
-  fi
-  return ${_quit_code}
-}
-
 function phala_scripts_help(){
 # "		<dcap>				install DCAP driver\n"\
 # "		<isgx>				install isgx driver\n"\
@@ -182,6 +165,8 @@ function phala_scripts_case() {
 function phala_scripts_main() {
   # Error Quit
   set -e
+  trap "phala_scripts_trap" EXIT
+  export _phala_scripts_error_trap=true
 
   # return 1
   # Cannot run driectly
