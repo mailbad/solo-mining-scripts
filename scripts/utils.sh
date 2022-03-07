@@ -53,7 +53,7 @@ function phala_scripts_utils_read() {
 function _echo_c() {
   if [ "$shell_name" != "bash" ] || [[ "$2" =~ "%" ]];then
     [ -z "$_phala_scripts_utils_printf_value" ] && _phala_scripts_utils_printf_value=""
-    printf "\033[0;$1m$2\033[0m\n" "${_phala_scripts_utils_printf_value}"
+    printf "\033[0;$1m$2\033[0m\n" "${_phala_scripts_utils_printf_value[@]}"
     unset _phala_scripts_utils_printf_value
 
   else
@@ -79,4 +79,15 @@ function phala_scripts_utils_default() {
 
 function phala_scripts_utils_docker() {
   docker-compose --env-file ${phala_scripts_docker_envf} -f ${phala_scripts_dir}/docker-compose.yml $*
+}
+
+function phala_scripts_utils_docker_status() {
+  exist=$(docker inspect --format '{{.State.Running}}' phala-${1} 2>/dev/null)
+  if [ x"${exist}" == x"true" ]; then
+    return 0
+  elif [ "${exist}" == "false" ]; then
+    return 2
+  else
+    return 1
+  fi
 }

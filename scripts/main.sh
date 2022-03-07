@@ -6,6 +6,7 @@
 . ${phala_scripts_dir}/scripts/config.sh
 . ${phala_scripts_dir}/scripts/check.sh
 . ${phala_scripts_dir}/scripts/install.sh
+. ${phala_scripts_dir}/scripts/status.sh
 
 function phala_scripts_help(){
 # "		<dcap>				install DCAP driver\n"\
@@ -64,7 +65,7 @@ function phala_scripts_stop_logs() {
     phala_scripts_utils_docker logs -f ${_container_name}
   elif [ -z "$2" ] && [ "$1" == "ps" ];then
     phala_scripts_utils_docker ps
-  elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
+  elif [[ ! -z ${_container_name} ]] && [ "$1" == "ps" ];then
     phala_scripts_utils_docker ps ${_container_name}
   else
     phala_scripts_help
@@ -131,10 +132,11 @@ function phala_scripts_case() {
       phala_scripts_stop_logs $*
     ;;
     status)
-        status $2
+      set +e
+      phala_scripts_status
     ;;
     update)
-        update $2
+      :
     ;;
     logs|ps)
       set +e
@@ -145,7 +147,6 @@ function phala_scripts_case() {
       else
         phala_scripts_stop_logs $*
       fi
-      set -e
     ;;
     uninstall)
       set +e
@@ -188,6 +189,7 @@ function phala_scripts_main() {
 
   # default config
   phala_scripts_config
+  [ -f "${phala_scripts_docker_envf}" ] && export $(sed '/MNEMONIC=/d' ${phala_scripts_docker_envf})
 
   # check 
   phala_scripts_check
