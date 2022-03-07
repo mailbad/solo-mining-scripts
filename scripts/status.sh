@@ -29,8 +29,7 @@ phala_scripts_utils_gettext "Phala Status:\n"\
 "	miner score			%s\n"\
 "------------------------------------------------------------------------------------------------------------------\n"\
 "Please wait for the miner registration status to change to %s before proceeding on-chain operations\n"\
-"If the chain synchronization is completed, but the pherry height is empty, please enter the group and ask\n"\
-"--------------------------------------------  Remaining %s refresh  ---------------------------------------------\n"
+"If the chain synchronization is completed, but the pherry height is empty, please enter the group and ask"
 }
 
 function phala_scripts_status_khala() {
@@ -44,7 +43,7 @@ function phala_scripts_status_kusama() {
 }
 
 function phala_scripts_status(){
-
+  trap "clear;exit" 2
   local balance=$(phala_scripts_status_khala free-balance ${GAS_ACCOUNT_ADDRESS})
   local balance=$(echo "scale=4;${balance}/1000000000000"|bc)
 
@@ -106,7 +105,6 @@ function phala_scripts_status(){
     fi
   done
 
-
   clear
   printf "\r$(phala_scripts_status_msg)\n" \
         "${phala_scripts_version}" "${PHALA_ENV}"\
@@ -126,7 +124,12 @@ function phala_scripts_status(){
         "${publickey}" \
         "${registerStatus}" \
         "${score}" \
-        "$(phala_scripts_utils_green $(phala_scripts_utils_gettext 'registered'))" \
-        "${seq_time}"
+        "$(phala_scripts_utils_green $(phala_scripts_utils_gettext 'registered'))"
 
+  for seq_time in $(seq -w 60 -1 1);do
+    printf "\r$(phala_scripts_utils_gettext ' -------------------------------------------  Remaining %s refresh  ---------------------------------------------')" "${seq_time}"
+    sleep 1
+  done
+  printf "\n$(phala_scripts_utils_gettext Refreshing)...\n" 
+  phala_scripts_status
 }
