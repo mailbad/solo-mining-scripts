@@ -127,7 +127,7 @@ function phala_scripts_status(){
         "$(phala_scripts_utils_green $(phala_scripts_utils_gettext 'registered'))"
 
   for seq_time in $(seq -w 60 -1 1);do
-    printf "\r$(phala_scripts_utils_gettext ' -------------------------------------------  Remaining %s refresh  ---------------------------------------------')" "${seq_time}"
+    printf "\r$(phala_scripts_utils_gettext ' -------------------------------------------  Remaining %s refresh  ---------------------------------------------')" "${seq_time}s"
     sleep 1
   done
   printf "\n$(phala_scripts_utils_gettext Refreshing)...\n" 
