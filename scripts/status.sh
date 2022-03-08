@@ -29,7 +29,8 @@ phala_scripts_utils_gettext "Phala Status:\n"\
 "	miner score			%s\n"\
 "------------------------------------------------------------------------------------------------------------------\n"\
 "Please wait for the miner registration status to change to %s before proceeding on-chain operations\n"\
-"If the chain synchronization is completed, but the pherry height is empty, please enter the group and ask"
+"If the chain synchronization is completed, but the pherry height is empty, please enter the group and ask\n"\
+"----------------------------------- last refresh time [ %s ] ------------------------------------"
 }
 
 function phala_scripts_status_khala() {
@@ -126,10 +127,11 @@ function phala_scripts_status(){
         "${publickey}" \
         "${registerStatus}" \
         "${score}" \
-        "$(phala_scripts_utils_green $(phala_scripts_utils_gettext 'registered'))"
+        "$(phala_scripts_utils_green $(phala_scripts_utils_gettext 'registered'))" \
+        "$(date +'%F %H:%M:%S')"
 
   for seq_time in $(seq -w 60 -1 1);do
-    printf "\r$(phala_scripts_utils_gettext ' -------------------------------------------  Remaining %s refresh  ---------------------------------------------')" "${seq_time}s"
+    printf "\r$(phala_scripts_utils_gettext ' -------------------------------------------  Remaining %s refresh  --------------------------------------------')" "${seq_time}s"
     sleep 1
   done
   printf "\n$(phala_scripts_utils_gettext Refreshing)...\n" 
