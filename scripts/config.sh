@@ -148,24 +148,8 @@ function phala_scripts_config_set_locale() {
 }
 
 function phala_scripts_config_set() {
+  trap '[ $? -eq 0 ] && phala_scripts_log info "Set success" cut || phala_scripts_trap' EXIT
   local _phala_env=PRO
-  # if [ "$1" == "show" ];then
-  #   phala_scripts_config_show
-  #   return 0
-  # elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];then
-  #   _phala_env=DEV
-  #   phala_node_image=${phala_node_dev_image}
-  #   phala_scripts_public_ws=${phala_scripts_public_ws_dev}
-  # elif [ "$1" == "locale" ];then
-  #   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-
-  # elif [ ! -z "$1" ];then
-  #   phala_scripts_help
-  #   return 1
-  # fi
-
-
-
   case $1 in
     '')
       :
@@ -277,6 +261,12 @@ function phala_scripts_config_set() {
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
   khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
+
+  # stop all service
+  if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
+    phala_scripts_case stop
+  fi
+
   # save conf as env file
   sed -e "s#NODE_IMAGE=.*#NODE_IMAGE=${phala_node_image}#g" \
       -e "s#PRUNTIME_IMAGE=.*#PRUNTIME_IMAGE=${phala_pruntime_image}#g" \
@@ -302,6 +292,9 @@ function phala_scripts_config_set() {
 
   # run config docker-compose.yml update sgx device
   phala_scripts_config_dockeryml
+
+  # start all service
+  phala_scripts_case start
 
 }
 
