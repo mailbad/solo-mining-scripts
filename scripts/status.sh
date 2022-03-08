@@ -47,6 +47,9 @@ function phala_scripts_status(){
 
   trap "clear;exit" INT
 
+  #minutes ago
+  #find -type f -cmin -1
+
   local balance=$(phala_scripts_status_khala free-balance ${GAS_ACCOUNT_ADDRESS})
   local balance=$(echo "scale=4;${balance}/1000000000000"|bc)
 
