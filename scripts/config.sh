@@ -202,6 +202,7 @@ function phala_scripts_config_set() {
 
   # set locale
   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+  export LANG=${phala_scripts_config_input_lang}
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
