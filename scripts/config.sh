@@ -202,7 +202,7 @@ function phala_scripts_config_set() {
 
   # set locale
   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-  export LANG=${phala_scripts_config_input_lang}
+  phala_scripts_utils_setlocale
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
@@ -215,6 +215,8 @@ function phala_scripts_config_set() {
     phala_scripts_log info "Your confidenceLevel is：%s" cut
   fi
 
+  # skip input err quit
+  set +e
   # set core
   local _my_cpu_core_number=$(awk -F':' '/cpu cores/ {print $2;exit}' /proc/cpuinfo)
   while true ; do
@@ -232,7 +234,6 @@ function phala_scripts_config_set() {
   # set nodename
   export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
 
-  set +e
   # set mnemonic gas_account_address
   local _mnemonic=""
   local _gas_adress=""
