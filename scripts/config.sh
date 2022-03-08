@@ -139,10 +139,12 @@ function phala_scripts_config_set_locale() {
   local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
   local _phala_lang_tr=$(echo ${_phala_lang}|tr a-z A-Z)
   if [ "${_phala_lang_tr}" == "CN" ] || [ "${_phala_lang_tr}" == "US" ];then
-    echo ${_phala_lang_tr}
+    result_msg=${_phala_lang_tr}
   else
-    echo ${_phala_scripts_utils_printf_value}
+    result_msg=${_phala_scripts_utils_printf_value}
   fi
+  export PHALA_LANG=${result_msg}
+  echo ${result_msg}
 }
 
 function phala_scripts_config_set() {
@@ -176,6 +178,7 @@ function phala_scripts_config_set() {
       phala_scripts_check_envf
       phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
       sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
+      phala_scripts_utils_setlocale
       return 0
     ;;
     dev)
