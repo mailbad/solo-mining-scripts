@@ -202,19 +202,6 @@ function phala_scripts_config_set() {
 
   # set locale
   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-  # if [ "${PHALA_LANG}" == "CN" ] || [ "${PHALA_LANG}" == "US" ];then
-  #   _phala_scripts_utils_printf_value="${PHALA_LANG}"
-  # else
-  #   _phala_scripts_utils_printf_value="US"
-  # fi
-  # local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
-  # local _phala_lang_tr=$(echo ${_phala_lang}|tr a-z A-Z)
-  # if [ "${_phala_lang_tr}" == "CN" ] || [ "${_phala_lang_tr}" == "US" ]
-  #   phala_scripts_config_input_lang=${_phala_lang_tr}
-  # else
-  #   phala_scripts_config_input_lang=${_phala_scripts_utils_printf_value}
-  # fi
-   
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
