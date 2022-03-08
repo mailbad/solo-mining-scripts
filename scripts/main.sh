@@ -144,14 +144,9 @@ function phala_scripts_clear_logs() {
 
 function phala_scripts_case() {
   [ -L "/usr/local/bin/phala" ] || ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
-  [ $(echo $1|grep -E "^config$|^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
+  [ $(echo $1|grep -E "^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
-    install)
-      phala_scripts_check_dependencies
-      shift
-      phala_scripts_config_set $*
-    ;;
-    config)
+    install|config)
       shift
       phala_scripts_config_set $*
     ;;
@@ -213,7 +208,7 @@ function phala_scripts_case() {
 function phala_scripts_main() {
   # Error Quit
   set -e
-  trap "phala_scripts_trap" EXIT
+  trap "phala_scripts_trap" EXIT INT
   export _phala_scripts_error_trap=true
 
   # return 1

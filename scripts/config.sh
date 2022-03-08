@@ -148,7 +148,18 @@ function phala_scripts_config_set_locale() {
 }
 
 function phala_scripts_config_set() {
-  trap '[ $? -eq 0 ] && phala_scripts_log info "Set success" cut || phala_scripts_trap' EXIT
+  trap '_req_code=$?;[ $_req_code -eq 0 ] && phala_scripts_log info "Set success" cut || phala_scripts_trap ${_req_code};unset _req_code' EXIT
+
+  # set locale
+  if [ -z "${PHALA_LANG}" ];then
+    phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+    export PHALA_LANG=${phala_scripts_config_input_lang}
+    phala_scripts_utils_setlocale
+  fi
+
+  # check base
+  phala_scripts_check_dependencies
+
   local _phala_env=PRO
   case $1 in
     '')
@@ -185,11 +196,6 @@ function phala_scripts_config_set() {
     phala_scripts_log error "%s\nTemplate file not found!" cut
   fi
 
-  # set locale
-  phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-  export PHALA_LANG=${phala_scripts_config_input_lang}
-  phala_scripts_utils_setlocale
-
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
   local _confidenceLevel=$(phala_scripts_check_sgxtest | awk '/confidenceLevel =/{ print $3 }' | tr -cd "[0-9]")
@@ -219,6 +225,7 @@ function phala_scripts_config_set() {
 
   # set nodename
   export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
+
 
   # set mnemonic gas_account_address
   local _mnemonic=""

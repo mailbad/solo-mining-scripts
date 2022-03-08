@@ -2,7 +2,10 @@
 
 function phala_scripts_trap() {
   local _quit_code=$?
-  [ ${_quit_code} -eq 0 ] && return ${_quit_code}
+  [ ${_quit_code} -eq 0 ] && exit ${_quit_code}
+  if [ ${_quit_code} -eq 130 ] || [ "$1" == "130" ];then
+    exit ${_quit_code}
+  fi
   local source_path=$(caller 0 |awk '{print $2}')
   if [ "${_phala_scripts_error_trap}" != "false" ];then
     export _phala_scripts_utils_printf_value="${source_path}" 
@@ -10,7 +13,7 @@ function phala_scripts_trap() {
     local _trap_msg="----------------------------------------------------------------------------------------------------\n${_trap_msg}\n----------------------------------------------------------------------------------------------------" 
     phala_scripts_utils_red ${_trap_msg}
   fi
-  return ${_quit_code}
+  exit ${_quit_code}
 }
 
 function phala_scripts_utils_setlocale() {
