@@ -60,9 +60,9 @@ function phala_scripts_stop_logs() {
     phala_scripts_utils_docker stop ${_container_name}
     phala_scripts_utils_docker rm -f ${_container_name}
   elif [ -z "$2" ] && [ "$1" == "logs" ];then
-    phala_scripts_utils_docker logs -f
+    phala_scripts_utils_docker logs -f --tail 50
   elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
-    phala_scripts_utils_docker logs -f ${_container_name}
+    phala_scripts_utils_docker logs -f --tail 50 ${_container_name}
   elif [ -z "$2" ] && [ "$1" == "ps" ];then
     phala_scripts_utils_docker ps
   elif [[ ! -z ${_container_name} ]] && [ "$1" == "ps" ];then
