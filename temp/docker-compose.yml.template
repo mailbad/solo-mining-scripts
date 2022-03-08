@@ -8,7 +8,6 @@ services:
     - "9933:9933"
     - "9934:9934"
     - "9944:9944"
-
     - "9945:9945"
     - "30333:30333"
     - "30334:30334"
@@ -26,7 +25,6 @@ services:
    ports:
     - "8000:8000"
    devices:phala_template_ymlvalue
-
    restart: always
    environment:
     - EXTRA_OPTS=--cores=${CORES}
