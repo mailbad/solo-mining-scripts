@@ -66,7 +66,7 @@ phala_scripts_config_default() {
   # check user env and source data
   [ -z "${NODE_VOLUMES}" ] || {
     local _data_path=${NODE_VOLUMES%:*}
-    khala_data_path_default=${_data_path%/*}
+    khala_data_path_default=${_data_path%/[dev pro]*}
   }
   
   export phala_scripts_sgxtest_image \
