@@ -177,8 +177,9 @@ function phala_scripts_config_set() {
     locale)
       phala_scripts_check_envf
       phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-      sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
+      export PHALA_LANG=${phala_scripts_config_input_lang}
       phala_scripts_utils_setlocale
+      sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
       return 0
     ;;
     dev)
@@ -198,10 +199,11 @@ function phala_scripts_config_set() {
   if [ ! -f ${phala_scripts_temp_envf} ];then
     _phala_scripts_utils_printf_value="${phala_scripts_temp_envf}"
     phala_scripts_log error "%s\nTemplate file not found!" cut
-  fi  
+  fi
 
   # set locale
   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+  export PHALA_LANG=${phala_scripts_config_input_lang}
   phala_scripts_utils_setlocale
 
   # get cpu level
