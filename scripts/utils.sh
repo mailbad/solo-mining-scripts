@@ -2,12 +2,8 @@
 
 function phala_scripts_trap() {
   local _quit_code=$?
-  [ ${_quit_code} -eq 0 ] && return 0
+  [ ${_quit_code} -eq 0 ] && return ${_quit_code}
   local source_path=$(caller 0 |awk '{print $2}')
-  [ "${source_path}" == "phala_scripts_status" ] && {
-    clear
-    exit
-  }
   if [ "${_phala_scripts_error_trap}" != "false" ];then
     export _phala_scripts_utils_printf_value="${source_path}" 
     local _trap_msg=$(phala_scripts_utils_gettext "\t [ %s ]\t unknown error!")

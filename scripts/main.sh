@@ -166,7 +166,7 @@ function phala_scripts_case() {
 function phala_scripts_main() {
   # Error Quit
   set -e
-  trap "phala_scripts_trap" INT EXIT
+  trap "phala_scripts_trap" EXIT
   export _phala_scripts_error_trap=true
 
   # return 1
