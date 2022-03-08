@@ -170,6 +170,7 @@ function phala_scripts_config_set() {
       return 0
     ;;
     locale)
+      phala_scripts_check_envf
       phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
       sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
       return 0
