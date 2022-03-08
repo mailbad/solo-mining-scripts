@@ -191,9 +191,7 @@ function phala_scripts_case() {
       phala_scripts_ps_container
     ;;
     uninstall)
-      set +e
       phala_scripts_stop_logs stop > /dev/null 2>&1
-      set -e
       phala_scripts_uninstall
     ;;
     sgx-test)

@@ -148,7 +148,6 @@ function phala_scripts_config_set_locale() {
 }
 
 function phala_scripts_config_set() {
-  trap '_req_code=$?;[ $_req_code -eq 0 ] && phala_scripts_log info "Set success" cut || phala_scripts_trap ${_req_code};unset _req_code' EXIT
 
   # set locale
   if [ -z "${PHALA_LANG}" ];then
@@ -175,6 +174,8 @@ function phala_scripts_config_set() {
       export PHALA_LANG=${phala_scripts_config_input_lang}
       phala_scripts_utils_setlocale
       sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
+      # print sucess
+      phala_scripts_log info "Set success" cut
       return 0
     ;;
     dev)
@@ -209,6 +210,7 @@ function phala_scripts_config_set() {
 
   # skip input err quit
   set +e
+
   # set core
   local _my_cpu_core_number=$(awk -F':' '/cpu cores/ {print $2;exit}' /proc/cpuinfo)
   while true ; do
@@ -299,6 +301,9 @@ function phala_scripts_config_set() {
 
   # run config docker-compose.yml update sgx device
   phala_scripts_config_dockeryml
+
+  # print sucess
+  phala_scripts_log info "Set success" cut
 
   # start all service
   phala_scripts_case start
