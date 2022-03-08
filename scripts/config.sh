@@ -165,6 +165,9 @@ function phala_scripts_config_set() {
 
 
   case $1 in
+    '')
+      :
+    ;;
     show)
       phala_scripts_config_show
       return 0
