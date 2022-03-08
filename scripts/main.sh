@@ -196,33 +196,3 @@ function phala_scripts_main() {
   phala_scripts_case $*
 
 }
-txt=$(gettext -se "Phala Status:\n"\
-"------------------------------ Script version %s ----------------------------\n"\
-"	service name		service status		local node block height\n"\
-"--------------------------------------------------------------------------\n"\
-"	khala-node		%s			%s / %s\n"\
-"	kusama-node		%s			%s / %s\n"\
-"	phala-pruntime		%s\n"\
-"	phala-pherry		%s			khala %s / kusama %s\n"\
-"--------------------------------------------------------------------------\n"\
-"	Status check						result\n"\
-"--------------------------------------------------------------------------\n"\
-"	khala chain synchronization status		%s, difference is %s\n"\
-"	kusama chain synchronization status		%s, difference is %s\n"\
-"	pherry synchronizes khala chain status		%s, difference is %s\n"\
-"	pherry syncs kusama chain status  		%s, difference is %s\n"\
-"--------------------------------------------------------------------------\n"\
-"	account information		content\n"\
-"--------------------------------------------------------------------------\n"\
-"	node name           		%s\n"\
-"	cores     			%s\n"\
-"	GAS account address      	%s\n"\
-"	GAS account balance      	%s\n"\
-"	stake pool account address	%s\n"\
-"	miner/worker public key 	%s\n"\
-"	miner registration status	%s\n"\
-"	miner score			%s\n"\
-"--------------------------------------------------------------------------")
-
-
-# printf "$txt\n"
