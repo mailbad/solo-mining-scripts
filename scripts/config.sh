@@ -149,7 +149,7 @@ function phala_scripts_config_set_locale() {
 
 function phala_scripts_config_set() {
 
-  # set locale
+  # set locale (first run)
   if [ -z "${PHALA_LANG}" ];then
     phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
     export PHALA_LANG=${phala_scripts_config_input_lang}
@@ -272,9 +272,10 @@ function phala_scripts_config_set() {
   khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
 
   # stop all service
-  if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
-    phala_scripts_case stop
-  fi
+  # 2022 0308: docker-compose up -d auto start
+  # if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
+  #   phala_scripts_case stop
+  # fi
 
   # save conf as env file
   sed -e "s#NODE_IMAGE=.*#NODE_IMAGE=${phala_node_image}#g" \
