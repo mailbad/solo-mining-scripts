@@ -62,6 +62,12 @@ phala_scripts_config_default() {
     phala_scripts_public_ws=${phala_scripts_public_ws_dev}
     phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
   }
+
+  # check user env and source data
+  [ -z "${NODE_VOLUMES}" ] || {
+    local _data_path=${NODE_VOLUMES%:*}
+    khala_data_path_default=${_data_path%/*}
+  }
   
   export phala_scripts_sgxtest_image \
          phala_node_image \
@@ -110,7 +116,7 @@ function phala_scripts_config_show() {
     cat ${phala_scripts_docker_envf}
 }
 
-phala_scripts_config_set_nodename() {
+function phala_scripts_config_set_nodename() {
   # set nodename
   while true ; do
     local _node_name=$(phala_scripts_utils_read "Enter your node name(not contain spaces)")
@@ -123,24 +129,85 @@ phala_scripts_config_set_nodename() {
   done
 }
 
+function phala_scripts_config_set_locale() {
+  # set locale
+  if [ "${PHALA_LANG}" == "CN" ] || [ "${PHALA_LANG}" == "US" ];then
+    _phala_scripts_utils_printf_value="${PHALA_LANG}"
+  else
+    _phala_scripts_utils_printf_value="US"
+  fi
+  local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
+  local _phala_lang_tr=$(echo ${_phala_lang}|tr a-z A-Z)
+  if [ "${_phala_lang_tr}" == "CN" ] || [ "${_phala_lang_tr}" == "US" ];then
+    echo ${_phala_lang_tr}
+  else
+    echo ${_phala_scripts_utils_printf_value}
+  fi
+}
+
 function phala_scripts_config_set() {
   local _phala_env=PRO
-  if [ "$1" == "show" ];then
-    phala_scripts_config_show
-    return 0
-  elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];then
-    _phala_env=DEV
-    phala_node_image=${phala_node_dev_image}
-    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
-  elif [ ! -z "$1" ];then
-    phala_scripts_help
-    return 1
-  fi
+  # if [ "$1" == "show" ];then
+  #   phala_scripts_config_show
+  #   return 0
+  # elif [ "$(echo $1|tr a-z A-Z)" == "DEV" ];then
+  #   _phala_env=DEV
+  #   phala_node_image=${phala_node_dev_image}
+  #   phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+  # elif [ "$1" == "locale" ];then
+  #   phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+
+  # elif [ ! -z "$1" ];then
+  #   phala_scripts_help
+  #   return 1
+  # fi
+
+
+
+  case $1 in
+    show)
+      phala_scripts_config_show
+      return 0
+    ;;
+    locale)
+      phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+      sed -i "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" ${phala_scripts_docker_envf}
+      return 0
+    ;;
+    dev)
+      _phala_env=DEV
+      export phala_node_image=${phala_node_dev_image}
+      export phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+    ;;
+    *)
+      phala_scripts_help
+      _phala_scripts_error_trap=false
+      return 1
+    ;;
+  esac
+
+
 
   if [ ! -f ${phala_scripts_temp_envf} ];then
     _phala_scripts_utils_printf_value="${phala_scripts_temp_envf}"
     phala_scripts_log error "%s\nTemplate file not found!" cut
   fi  
+
+  # set locale
+  phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+  # if [ "${PHALA_LANG}" == "CN" ] || [ "${PHALA_LANG}" == "US" ];then
+  #   _phala_scripts_utils_printf_value="${PHALA_LANG}"
+  # else
+  #   _phala_scripts_utils_printf_value="US"
+  # fi
+  # local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
+  # local _phala_lang_tr=$(echo ${_phala_lang}|tr a-z A-Z)
+  # if [ "${_phala_lang_tr}" == "CN" ] || [ "${_phala_lang_tr}" == "US" ]
+  #   phala_scripts_config_input_lang=${_phala_lang_tr}
+  # else
+  #   phala_scripts_config_input_lang=${_phala_scripts_utils_printf_value}
+  # fi
+   
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
@@ -155,8 +222,6 @@ function phala_scripts_config_set() {
 
   # set core
   local _my_cpu_core_number=$(awk -F':' '/cpu cores/ {print $2;exit}' /proc/cpuinfo)
-
-  set +e
   while true ; do
     local _cores=$(phala_scripts_utils_read "You use several cores to participate in mining")
     expr ${_cores} + 0 > /dev/null 2>&1
@@ -172,6 +237,7 @@ function phala_scripts_config_set() {
   # set nodename
   export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
 
+  set +e
   # set mnemonic gas_account_address
   local _mnemonic=""
   local _gas_adress=""
@@ -224,6 +290,7 @@ function phala_scripts_config_set() {
       -e "s#OPERATOR=.*#OPERATOR=${phala_scripts_config_input_operator}#g" \
       -e "s#phala_template_data_value#${khala_data_path_default}#g" \
       -e "s#PHALA_ENV=.*#PHALA_ENV=${_phala_env}#g" \
+      -e "s#PHALA_LANG=.*#PHALA_LANG=${phala_scripts_config_input_lang}#g" \
       ${phala_scripts_temp_envf} > ${phala_scripts_docker_envf}
 
   if [ -f "${phala_scripts_dir}/.env" ] && [ -L "${phala_scripts_dir}/.env" ];then
