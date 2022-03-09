@@ -6,3 +6,5 @@ locale/
 /tools/get-node.sh
 /tools/get-docker.sh
 backup/
+.env
+docker-compose.yml
