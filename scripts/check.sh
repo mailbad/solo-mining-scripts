@@ -70,6 +70,8 @@ function phala_scripts_check_sgxdevice() {
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
   _sgx_aems_service=$(awk '/AESM service/ {print $1}' ${_sgx_msg_file})
   _sgx_launch_enclaves=$(awk '/Able to launch enclaves/ {print $1}' ${_sgx_msg_file})
+  _sgx_production_mods=$(awk '/Production mode$/ {print $1}' ${_sgx_msg_file})
+  _sgx_intel_whitelisted=$(awk '//Intel whitelisted// {print $1}' ${_sgx_msg_file})
   if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ];then
     :
   else
@@ -77,10 +79,11 @@ function phala_scripts_check_sgxdevice() {
     phala_scripts_install_sgx
   fi
 
-  if [ "${_sgx_launch_enclaves}" == "yes" ];then
+  # if [ "${_sgx_launch_enclaves}" == "yes" ] && [ "${_sgx_production_mods}" == "yes" ] && [ "${_sgx_intel_whitelisted}" == "yes" ];then
+  if [ "${_sgx_launch_enclaves}" == "yes" ] && [ "${_sgx_production_mods}" == "yes" ];then
     :
   else
-    phala_scripts_log error "✘ Able to launch enclaves"
+    phala_scripts_log error "✘  Able to launch enclaves\n✘  Production mode Fail \n RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
   fi
 
   if [ "${_sgx_aems_service}" == "yes" ];then
