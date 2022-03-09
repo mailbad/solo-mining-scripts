@@ -77,6 +77,7 @@ function phala_scripts_install_otherdependencies(){
               printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
               systemctl start docker.socket
           fi
+          systemctl disable docker
 
         ;;
         node)
