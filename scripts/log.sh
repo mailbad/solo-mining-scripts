@@ -23,7 +23,7 @@ function phala_scripts_log() {
     
   local logtype=$(echo $1|tr a-z A-Z)
   local msg=$(phala_scripts_utils_gettext $2)
-  [ ! -z $3 ] && local msg="\n${msg}"
+  [ ! -z $3 ] && local msg="\n\n\t${msg}\n"
   local source_path=$(caller 0 |sed "s#${phala_scripts_dir}#.#g"|awk '{print $3":"$1}')
   local logformat="[${datetime}\t${logtype}\t${source_path}]\t${msg}"
   [ ! -z $3 ] && local logformat="----------------------------------------------------------------------------------------------------\n${logformat}\n----------------------------------------------------------------------------------------------------" 

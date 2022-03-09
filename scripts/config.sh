@@ -10,6 +10,11 @@ phala_scripts_support_kernel=(
   "5.13"
 )
 
+phala_scripts_support_language=(
+  "US" "English"
+  "CN" "中文"
+)
+
 phala_scripts_dependencies_default_soft=(
   jq curl wget unzip zip gettext
 )
@@ -139,7 +144,10 @@ function phala_scripts_config_set_locale() {
   else
     _phala_scripts_utils_printf_value="US"
   fi
-  local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
+  # local _phala_lang=$(phala_scripts_utils_read "Set phala locale" ${_phala_scripts_utils_printf_value})
+  local _set_lang=$(phala_scripts_utils_gettext "Set Language")
+  local _set_choices=$(phala_scripts_utils_gettext "Choices")
+  local _phala_lang=$(whiptail --title "${_set_lang}" --clear --default-item ${_phala_scripts_utils_printf_value} --menu "${_set_choices}" 12 35 5 ${phala_scripts_support_language[@]} 3>&1 1>&2 2>&3)
   local _phala_lang_tr=$(echo ${_phala_lang}|tr a-z A-Z)
   if [ "${_phala_lang_tr}" == "CN" ] || [ "${_phala_lang_tr}" == "US" ];then
     result_msg=${_phala_lang_tr}
@@ -252,6 +260,7 @@ function phala_scripts_config_set() {
       _gas_adress=$(node ${phala_scripts_tools_dir}/console.js utils verify "$_mnemonic")
       _balance=$(node  ${phala_scripts_tools_dir}/console.js --substrate-ws-endpoint "${phala_scripts_public_ws}" chain free-balance $_gas_adress 2>&1)
       _balance=$(echo $_balance | awk -F " " '{print $NF}')
+      [ -z "${_balance}" ] && _balance=0
       _balance=$(echo "$_balance / 1000000000000"|bc)
       if [ `echo "$_balance > 0.1"|bc` -eq 1 ]; then
         export phala_scripts_config_input_mnemonic=${_mnemonic}
