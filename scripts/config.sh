@@ -106,7 +106,7 @@ function phala_scripts_config_dockeryml() {
   for d in "${phala_scripts_sgx_device_path[@]}";do
     _phala_docker_yml="${_phala_docker_yml}\n    - ${d}"
   done
-  chattr -i ${phala_scripts_docker_ymlf}
+  [ -f ${phala_scripts_docker_ymlf} ] && chattr -i ${phala_scripts_docker_ymlf}
   sed "s#phala_template_ymlvalue#${_phala_docker_yml}#g" ${phala_scripts_temp_ymlf} > ${phala_scripts_docker_ymlf}
   chattr +i ${phala_scripts_docker_ymlf}
   if [ -f "${phala_scripts_dir}/docker-compose.yml" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
@@ -298,7 +298,7 @@ function phala_scripts_config_set() {
   # fi
 
   # save conf as env file
-  chattr -i ${phala_scripts_docker_envf}
+  [ -f ${phala_scripts_docker_envf} ] && chattr -i ${phala_scripts_docker_envf}
   sed -e "s#NODE_IMAGE=.*#NODE_IMAGE=${phala_node_image}#g" \
       -e "s#PRUNTIME_IMAGE=.*#PRUNTIME_IMAGE=${phala_pruntime_image}#g" \
       -e "s#PHERRY_IMAGE=.*#PHERRY_IMAGE=${phala_pherry_image}#g" \
