@@ -11,7 +11,7 @@ function phala_scripts_install_aptdependencies() {
   _default_soft=$*
   phala_scripts_log info "Apt update" cut
   # modify cn 
-  sed -i 's#http://archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
+  [ "${PHALA_LANG}" == "CN" ] || sed -i 's#http://archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
   apt update
   if [ $? -ne 0 ]; then
     phala_scripts_log error "Apt update failed."
@@ -57,15 +57,23 @@ function phala_scripts_install_otherdependencies(){
             curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
           fi
 
-          [ ! type docker >/dev/null 2>&1 ] && {
-            bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
-            systemctl start docker
-          }
+          if [ ! type docker >/dev/null 2>&1 ];then
+            # set cn 
+            [ "${PHALA_LANG}" == "CN" ] && {
+              bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+              systemctl stop docker.socket
+              printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
+              systemctl start docker.socket
+            } || {
+              ${phala_scripts_tools_dir}/get-docker.sh
+            }
+          fi
+
           apt install -y docker-compose
         ;;
         node)
           find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
-          if [ !-f "${phala_scripts_tools_dir}/get-node.sh" ];then
+          if [ ! -f "${phala_scripts_tools_dir}/get-node.sh" ];then
             curl -fsSL https://deb.nodesource.com/setup_lts.x -o ${phala_scripts_tools_dir}/get-node.sh
           fi
           bash ${phala_scripts_tools_dir}/get-node.sh
