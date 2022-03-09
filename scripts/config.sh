@@ -212,8 +212,8 @@ function phala_scripts_config_set() {
   set +e
 
   # set core
-  local _cpu_s=$(LANG=en_US.UTF-8 lscpu|awk '/^CPU\(s\):/{print}')
-  local _cpu_sockets=$(LANG=en_US.UTF-8 lscpu|awk '/^Socket\(s\):/{print}')
+  local _cpu_s=$(LANG=en_US.UTF-8 lscpu|awk -F':' '/^CPU\(s\):/{print $2}')
+  local _cpu_sockets=$(LANG=en_US.UTF-8 lscpu|awk -F':' '/^Socket\(s\):/{print $2}')
   local _my_cpu_core_number=$((${_cpu_s}*${_cpu_sockets}))
   while true ; do
     local _cores=$(phala_scripts_utils_read "You use several cores to participate in mining")
