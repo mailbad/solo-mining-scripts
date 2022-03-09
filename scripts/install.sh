@@ -52,25 +52,32 @@ function phala_scripts_install_otherdependencies(){
     if ! type $_package >/dev/null 2>&1;then
       case $_package in
         docker|docker-compose)
-          find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
-          if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
-            curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
-          fi
+          # find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
+          # if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
+          #   curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
+          # fi
 
-          if [ ! type docker >/dev/null 2>&1 ];then
-            # set cn 
-            if [ "${PHALA_LANG}" == "CN" ];then
-              bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
-              systemctl stop docker.socket
-              [ -d /etc/docker ] || mkdir /etc/docker  
+          # if [ ! type docker >/dev/null 2>&1 ];then
+          #   # set cn 
+          #   if [ "${PHALA_LANG}" == "CN" ];then
+          #     bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+          #     systemctl stop docker.socket
+          #     [ -d /etc/docker ] || mkdir /etc/docker  
+          #     printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
+          #     systemctl start docker.socket
+          #   else
+          #     ${phala_scripts_tools_dir}/get-docker.sh
+          #   fi
+          # fi
+          # set cn 
+          [ type ${_package} >/dev/null 2>&1 ] && continue
+          apt install -y ${_package}
+          if [ "${PHALA_LANG}" == "CN" ];then
+              systemctl stop docker.socket  
               printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
               systemctl start docker.socket
-            else
-              ${phala_scripts_tools_dir}/get-docker.sh
-            fi
           fi
 
-          apt install -y docker-compose
         ;;
         node)
           find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
@@ -123,6 +130,7 @@ function phala_scripts_install_sgx_k5_4(){
   # curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
   # add-apt-repository "deb https://download.fortanix.com/linux/apt xenial main"  && \
   # apt install -y intel-sgx-dkms
+
   [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
     curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
   }
