@@ -69,11 +69,18 @@ function phala_scripts_check_sgxdevice() {
   _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
   _sgx_aems_service=$(awk '/AESM service/ {print $1}' ${_sgx_msg_file})
+  _sgx_launch_enclaves=$(awk '/Able to launch enclaves/ {print $1}' ${_sgx_msg_file})
   if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ];then
     :
   else
     # install
     phala_scripts_install_sgx
+  fi
+
+  if [ "${_sgx_launch_enclaves}" == "yes" ];then
+    :
+  else
+    phala_scripts_log error "✘ Able to launch enclaves"
   fi
 
   if [ "${_sgx_aems_service}" == "yes" ];then
