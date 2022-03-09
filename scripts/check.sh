@@ -81,7 +81,7 @@ function phala_scripts_check_sgxdevice() {
   #   phala_scripts_log error "RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
   # fi
 
-  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ "${_sgx_msg_device_path}" == "yes" ];then
+  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ ! -z "${_sgx_msg_device_path}" ];then
     :
   else
     # install
