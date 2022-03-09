@@ -72,7 +72,8 @@ phala_scripts_config_default() {
   # check user env and source data
   [ -z "${NODE_VOLUMES}" ] || {
     local _data_path=${NODE_VOLUMES%:*}
-    khala_data_path_default=${_data_path%/[dev pro]*}
+    # khala_data_path_default=${_data_path%/[dev pro]*}
+    khala_data_path_default=${_data_path%_[dev pro]*}
   }
   
   export phala_scripts_sgxtest_image \
@@ -289,7 +290,8 @@ function phala_scripts_config_set() {
   # set custom datadir
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
-  khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
+  # khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
+  khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
 
   # stop all service
   # 2022 0308: docker-compose up -d auto start
