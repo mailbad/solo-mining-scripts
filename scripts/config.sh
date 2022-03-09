@@ -214,6 +214,8 @@ function phala_scripts_config_set() {
     _phala_scripts_utils_printf_value="${phala_scripts_temp_envf}"
     phala_scripts_log error "%s\nTemplate file not found!" cut
   fi
+  # add no change temp
+  chattr +i ${phala_scripts_temp_dir}
 
   # get cpu level
   phala_scripts_log info "Test confidenceLevel, waiting for Intel to issue IAS remote certification report!" cut
