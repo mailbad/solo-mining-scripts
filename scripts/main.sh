@@ -147,7 +147,12 @@ function phala_scripts_clear_logs() {
 }
 
 function phala_scripts_case() {
-  [ -L "/usr/local/bin/phala" ] || ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
+  if [ ! -L "/usr/local/bin/phala" ];then
+    ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
+  elif [ ! -f "/usr/local/bin/phala" ] && [ -L "/usr/local/bin/phala" ];then
+    unlink /usr/local/bin/phala
+    ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
+  fi
   [ $(echo $1|grep -E "^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install|config)
