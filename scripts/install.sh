@@ -90,8 +90,11 @@ function phala_scripts_install_sgx() {
   if [ "$1" == "uninstall" ];then
     shift
     phala_scripts_log info "Uninstall Install Sgx device" cut
+    # [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
+    if [[ "${_kernel_version}" =~ "5.4" ]];then
+      [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
+    fi
     apt autoremove -y libsgx-enclave-common sgx-aesm-service
-    [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
     return 0
   fi
   phala_scripts_log info "Kernel ${_kernel_version}" cut
@@ -99,7 +102,7 @@ function phala_scripts_install_sgx() {
   if [[ "${_kernel_version}" =~ "5.13" ]];then
     phala_scripts_install_sgx_default
   elif [[ "${_kernel_version}" =~ "5.4" ]];then
-    # phala_scripts_install_sgx_k5_4
+    phala_scripts_install_sgx_k5_4
     phala_scripts_install_sgx_default
   else
     return 1
@@ -114,7 +117,11 @@ function phala_scripts_install_sgx_default() {
 }
 
 function phala_scripts_install_sgx_k5_4(){
-  curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
-  add-apt-repository "deb https://download.fortanix.com/linux/apt xenial main"  && \
-  apt install -y intel-sgx-dkms
+  # curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
+  # add-apt-repository "deb https://download.fortanix.com/linux/apt xenial main"  && \
+  # apt install -y intel-sgx-dkms
+  [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
+    curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
+  }
+  bash ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
 }
