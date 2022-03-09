@@ -87,10 +87,11 @@ function phala_scripts_ps_container() {
 }
 
 function phala_scripts_stop_container() {
-  [ "$1" == "uninstall" ] || {
-    phala_scripts_check_envf
-    phala_scripts_check_ymlf
-  }
+  # [ "$1" == "uninstall" ] || {
+  #   phala_scripts_check_envf
+  #   phala_scripts_check_ymlf
+  #   shift
+  # }
   local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf} 2>/dev/null|grep "\-${1}$")
   if [ -z "$1" ];then
     phala_scripts_utils_docker stop
@@ -200,8 +201,7 @@ function phala_scripts_case() {
       phala_scripts_ps_container
     ;;
     uninstall)
-      # phala_scripts_stop_logs stop > /dev/null 2>&1
-      phala_scripts_stop_container $1 > /dev/null 2>&1
+      # phala_scripts_stop_container 2 > /dev/null
       phala_scripts_uninstall
     ;;
     sgx-test)
