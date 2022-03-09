@@ -201,7 +201,7 @@ function phala_scripts_case() {
       phala_scripts_ps_container
     ;;
     uninstall)
-      # phala_scripts_stop_container 2 > /dev/null
+      phala_scripts_stop_container
       phala_scripts_uninstall
     ;;
     sgx-test)

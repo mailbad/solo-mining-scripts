@@ -92,6 +92,7 @@ function phala_scripts_utils_default() {
 function phala_scripts_utils_docker() {
   export _phala_scripts_error_trap=false
   [ "$1" == "up" ] && systemctl start docker >/dev/null 2>&1
+  type docker-compose >/dev/null 2>&1 || phala_scripts_log error "Command docker-compose not found" cut
   docker-compose --env-file ${phala_scripts_docker_envf} -f ${phala_scripts_dir}/docker-compose.yml $*
   export _phala_scripts_error_trap=true
 }

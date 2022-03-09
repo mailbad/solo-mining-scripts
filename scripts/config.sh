@@ -14,8 +14,9 @@ phala_scripts_dependencies_default_soft=(
   jq curl wget unzip zip gettext
 )
 
+# docker-compose: docker + docker-compose
 phala_scripts_dependencies_other_soft=(
-  docker docker-compose node
+  docker-compose node
 )
 
 export phala_scripts_version \

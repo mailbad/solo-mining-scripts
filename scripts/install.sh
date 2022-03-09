@@ -54,8 +54,8 @@ function phala_scripts_install_otherdependencies(){
   for _package in ${_other_soft};do
     if ! type $_package >/dev/null 2>&1;then
       case $_package in
-        docker|docker-compose)
-          # find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
+        docker-compose)
+          # find /etc/apt/sources.list.d -type f -name docker.list.* -exec rm -f {} \;
           # if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
           #   curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
           # fi
@@ -72,9 +72,12 @@ function phala_scripts_install_otherdependencies(){
           #     ${phala_scripts_tools_dir}/get-docker.sh
           #   fi
           # fi
+          
           # set cn 
           [ type ${_package} >/dev/null 2>&1 ] && continue
-          apt install -y ${_package}
+          apt install -y docker docker-compose && \
+          systemctl disable docker.socket
+          systemctl disable docker.service
           if [ "${PHALA_LANG}" == "CN" ];then
               systemctl stop docker.socket  
               printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
@@ -93,8 +96,7 @@ function phala_scripts_install_otherdependencies(){
       esac
     fi
   done
-  systemctl disable docker.socket
-  systemctl disable docker.service
+
 }
 
 function phala_scripts_install_sgx() {
