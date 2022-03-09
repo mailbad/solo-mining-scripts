@@ -45,7 +45,8 @@ phala_scripts_utils_gettext "Usage:\n"\
 
 function phala_scripts_start() {
   phala_scripts_check_envf
-  phala_scripts_check_ymlf
+  # phala_scripts_check_ymlf
+  phala_scripts_config_dockeryml
   phala_scripts_utils_docker up -d
 }
 
