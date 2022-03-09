@@ -199,7 +199,7 @@ function phala_scripts_config_set() {
 
   # set locale (first run)
   if [ -z "${PHALA_LANG}" ];then
-    phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+    export phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
     export PHALA_LANG=${phala_scripts_config_input_lang}
     phala_scripts_utils_setlocale
   fi

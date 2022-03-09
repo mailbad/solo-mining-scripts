@@ -107,6 +107,7 @@ function phala_scripts_install_sgx() {
 
     # frist uninstall
     apt autoremove -y libsgx-enclave-common sgx-aesm-service
+    # [ -c /dev/sgx_enclave ]
     [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
     # [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
     # if [[ "${_kernel_version}" =~ "5.4" ]];then
