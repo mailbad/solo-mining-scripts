@@ -149,6 +149,13 @@ function phala_scripts_config_set_locale() {
 
 function phala_scripts_config_set() {
 
+  if [ "$1" == "install" ];then
+    if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
+      phala_scripts_log info "Skip Install..."
+      return 0
+    fi
+  fi
+
   # set locale (first run)
   if [ -z "${PHALA_LANG}" ];then
     phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
