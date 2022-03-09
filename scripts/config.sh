@@ -148,18 +148,10 @@ function phala_scripts_config_set_locale() {
 }
 
 function phala_scripts_config_set() {
-
-  # set locale (first run)
-  if [ -z "${PHALA_LANG}" ];then
-    phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
-    export PHALA_LANG=${phala_scripts_config_input_lang}
-    phala_scripts_utils_setlocale
-  fi
-
-  # check base
-  phala_scripts_check_dependencies
+  # Usage: show locale dev 
 
   local _phala_env=PRO
+
   case $1 in
     '')
       :
@@ -190,8 +182,20 @@ function phala_scripts_config_set() {
     ;;
   esac
 
+  # set locale (first run)
+  if [ -z "${PHALA_LANG}" ];then
+    phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
+    export PHALA_LANG=${phala_scripts_config_input_lang}
+    phala_scripts_utils_setlocale
+  fi
 
+  # check base
+  phala_scripts_check_dependencies
 
+  # print env
+  phala_scripts_log info "\t\t\t\t\t[ ${} ]"
+
+  # check temp
   if [ ! -f ${phala_scripts_temp_envf} ];then
     _phala_scripts_utils_printf_value="${phala_scripts_temp_envf}"
     phala_scripts_log error "%s\nTemplate file not found!" cut
