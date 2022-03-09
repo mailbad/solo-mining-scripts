@@ -100,7 +100,7 @@ function phala_scripts_check_sgxdevice() {
   _sgx_error_help=$(awk -F':' '/SGX system software >/ {print $1}' ${_sgx_msg_file})
   # if [ -z "${_sgx_msg_device_path}" ];then
   if [ -z "${_sgx_msg_device_path}" ] || [ "${_sgx_error_help}" == "help" ];then
-    phala_scripts_log warn "\t RUN [ ${phala_scripts_tools_dir}/sgx-detect ]" cut
+    phala_scripts_log warn "\t RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
     phala_scripts_log error "The driver file was not found, please check the driver installation logs!"
   fi
   
