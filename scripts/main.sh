@@ -149,6 +149,12 @@ function phala_scripts_case() {
   [ $(echo $1|grep -E "^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install|config)
+      if [ "$1" == "install" ];then
+        if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
+          phala_scripts_log info "Skip Install..."
+          return 0
+        fi
+      fi
       shift
       phala_scripts_config_set $*
     ;;
