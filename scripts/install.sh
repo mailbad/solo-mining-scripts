@@ -77,7 +77,6 @@ function phala_scripts_install_otherdependencies(){
               printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
               systemctl start docker.socket
           fi
-          systemctl disable docker
 
         ;;
         node)
@@ -91,6 +90,8 @@ function phala_scripts_install_otherdependencies(){
       esac
     fi
   done
+  systemctl disable docker.socket
+  systemctl disable docker.service
 }
 
 function phala_scripts_install_sgx() {
@@ -101,23 +102,26 @@ function phala_scripts_install_sgx() {
 
     # frist uninstall
     apt autoremove -y libsgx-enclave-common sgx-aesm-service
+    [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
     # [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
-    if [[ "${_kernel_version}" =~ "5.4" ]];then
-      [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
-    fi
+    # if [[ "${_kernel_version}" =~ "5.4" ]];then
+      # [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
+    # fi
     return 0
   fi
   phala_scripts_log info "Kernel ${_kernel_version}" cut
   phala_scripts_log info "Install Sgx device"
-  if [[ "${_kernel_version}" =~ "5.13" ]];then
-    phala_scripts_install_sgx_default
-  elif [[ "${_kernel_version}" =~ "5.4" ]];then
-    # first install
-    phala_scripts_install_sgx_k5_4 && \
-    phala_scripts_install_sgx_default
-  else
-    return 1
-  fi
+  phala_scripts_install_sgx_k5_4 && \
+  phala_scripts_install_sgx_default
+  # if [[ "${_kernel_version}" =~ "5.13" ]];then
+  #   phala_scripts_install_sgx_default
+  # elif [[ "${_kernel_version}" =~ "5.4" ]];then
+  #   # first install
+  #   phala_scripts_install_sgx_k5_4 && \
+  #   phala_scripts_install_sgx_default
+  # else
+  #   return 1
+  # fi
 }
 
 function phala_scripts_install_sgx_default() {
