@@ -86,7 +86,7 @@ function phala_scripts_install_otherdependencies(){
 
         ;;
         node)
-          find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
+          find /etc/apt/sources.list.d -type f -name 'nodesource.list.*' -exec rm -f {} \;
           if [ ! -f "${phala_scripts_tools_dir}/get-node.sh" ];then
             curl -fsSL https://deb.nodesource.com/setup_lts.x -o ${phala_scripts_tools_dir}/get-node.sh
           fi

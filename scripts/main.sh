@@ -124,8 +124,9 @@ function phala_scripts_uninstall() {
   phala_scripts_install_sgx uninstall
   # test delete
   [ -L "/usr/local/bin/phala" ] && unlink /usr/local/bin/phala
-  mv ${phala_scripts_dir} ${phala_scripts_dir}.movetest
+  # mv ${phala_scripts_dir} ${phala_scripts_dir}.movetest
   phala_scripts_log info "Uninstall phala node sucess" cut
+  phala_scripts_log info " RUN \t\t\t\t\t [ rm -rf ${phala_scripts_dir} ] "
 }
 
 function phala_scripts_clear_logs() {
