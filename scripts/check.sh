@@ -77,7 +77,7 @@ function phala_scripts_check_sgxdevice() {
   # if [ "${_sgx_launch_enclaves}" == "yes" ] && [ "${_sgx_production_mods}" == "yes" ] && [ "${_sgx_intel_whitelisted}" == "yes" ];then
   #   :
   # else
-  #   phala_scripts_log error "✘  Able to launch enclaves\n✘  Production mode Fail \n RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
+  #   phala_scripts_log error "RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
   # fi
 
   if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ];then
@@ -100,6 +100,7 @@ function phala_scripts_check_sgxdevice() {
   _sgx_error_help=$(awk -F':' '/SGX system software >/ {print $1}' ${_sgx_msg_file})
   # if [ -z "${_sgx_msg_device_path}" ];then
   if [ -z "${_sgx_msg_device_path}" ] || [ "${_sgx_error_help}" == "help" ];then
+    phala_scripts_log warn "RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
     phala_scripts_log error "The driver file was not found, please check the driver installation logs!"
   fi
   
