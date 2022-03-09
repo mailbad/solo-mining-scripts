@@ -70,11 +70,12 @@ phala_scripts_config_default() {
   }
 
   # check user env and source data
-  [ -z "${NODE_VOLUMES}" ] || {
+  if [ ! -z "${NODE_VOLUMES}" ];then
     local _data_path=${NODE_VOLUMES%:*}
     # khala_data_path_default=${_data_path%/[dev pro]*}
-    khala_data_path_default=${_data_path%_[dev pro]*}
-  }
+    # khala_data_path_default=${_data_path%_[dev pro]*}
+    [ "${_phala_env}" == "dev" ] && khala_data_path_default=${_data_path%_dev/*} || khala_data_path_default=${_data_path%/*}
+  fi
   
   export phala_scripts_sgxtest_image \
          phala_node_image \
@@ -293,7 +294,11 @@ function phala_scripts_config_set() {
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
   # khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
-  khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
+  if [ "${_phala_env}" == "dev" ];then
+    khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
+  else
+    khala_data_path_default="${khala_data_path_default%/}"
+  fi
 
   # stop all service
   # 2022 0308: docker-compose up -d auto start
