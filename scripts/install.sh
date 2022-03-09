@@ -59,14 +59,15 @@ function phala_scripts_install_otherdependencies(){
 
           if [ ! type docker >/dev/null 2>&1 ];then
             # set cn 
-            [ "${PHALA_LANG}" == "CN" ] && {
+            if [ "${PHALA_LANG}" == "CN" ];then
               bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
               systemctl stop docker.socket
+              [ -d /etc/docker ] || mkdir /etc/docker  
               printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
               systemctl start docker.socket
-            } || {
+            else
               ${phala_scripts_tools_dir}/get-docker.sh
-            }
+            fi
           fi
 
           apt install -y docker-compose
