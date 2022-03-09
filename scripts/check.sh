@@ -94,6 +94,7 @@ function phala_scripts_check_sgxdevice() {
   else
     dpkg --list|grep -i sgx-aesm-service >/dev/null 2>&1
     [ $? -eq 0 ] && systemctl start aesmd || phala_scripts_install_sgx
+    sleep 1
   fi
 
   ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file}
