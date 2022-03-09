@@ -11,7 +11,10 @@ function phala_scripts_install_aptdependencies() {
   _default_soft=$*
   phala_scripts_log info "Apt update" cut
   # modify cn 
-  [ "${PHALA_LANG}" == "CN" ] || sed -i 's#http://archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
+  if [ "${PHALA_LANG}" == "CN" ];then
+    [ -f /etc/apt/sources.list.phala.bak ] && cp -arf  /etc/apt/sources.list /etc/apt/sources.list.phala.bak
+    sed -i 's#http://.*archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
+  fi
   apt update
   if [ $? -ne 0 ]; then
     phala_scripts_log error "Apt update failed."
