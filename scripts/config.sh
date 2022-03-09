@@ -193,7 +193,7 @@ function phala_scripts_config_set() {
   phala_scripts_check_dependencies
 
   # print env
-  phala_scripts_log info "\t\t\t\t\t[ ${} ]"
+  phala_scripts_log info "\t\t\t\t\t[ ${_phala_env} ]"
 
   # check temp
   if [ ! -f ${phala_scripts_temp_envf} ];then
