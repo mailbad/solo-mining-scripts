@@ -123,7 +123,7 @@ function phala_scripts_install_sgx_default() {
   # install aesm encalave
   curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
   add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
-  apt install -y libsgx-enclave-common sgx-aesm-service
+  apt reinstall -y libsgx-enclave-common sgx-aesm-service
 }
 
 function phala_scripts_install_sgx_k5_4(){

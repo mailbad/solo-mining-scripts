@@ -69,6 +69,7 @@ function phala_scripts_check_sgxdevice() {
   _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
   _sgx_aems_service=$(awk '/AESM service/ {print $1}' ${_sgx_msg_file})
+  _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
 
   # 'help: SGX system software > Able to launch enclaves > Debug mode' error msg
   # _sgx_launch_enclaves=$(awk '/Able to launch enclaves/ {print $1}' ${_sgx_msg_file})
@@ -80,7 +81,7 @@ function phala_scripts_check_sgxdevice() {
   #   phala_scripts_log error "RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
   # fi
 
-  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ];then
+  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ "${_sgx_msg_device_path}" == "yes" ];then
     :
   else
     # install
