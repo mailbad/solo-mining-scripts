@@ -90,7 +90,9 @@ function phala_scripts_utils_default() {
 }
 
 function phala_scripts_utils_docker() {
+  export _phala_scripts_error_trap=false
   docker-compose --env-file ${phala_scripts_docker_envf} -f ${phala_scripts_dir}/docker-compose.yml $*
+  export _phala_scripts_error_trap=true
 }
 
 function phala_scripts_utils_docker_status() {
