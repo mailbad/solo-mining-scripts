@@ -74,7 +74,7 @@ phala_scripts_config_default() {
     local _data_path=${NODE_VOLUMES%:*}
     # khala_data_path_default=${_data_path%/[dev pro]*}
     # khala_data_path_default=${_data_path%_[dev pro]*}
-    [ "${_phala_env}" == "dev" ] && khala_data_path_default=${_data_path%_dev/*} || khala_data_path_default=${_data_path%/*}
+    [ "${PHALA_ENV}" == "DEV" ] && khala_data_path_default=${_data_path%_dev/*} || khala_data_path_default=${_data_path%/*}
   fi
   
   export phala_scripts_sgxtest_image \
@@ -294,7 +294,7 @@ function phala_scripts_config_set() {
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
   # khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
-  if [ "${_phala_env}" == "dev" ];then
+  if [ "${_phala_env}" == "DEV" ];then
     khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
   else
     khala_data_path_default="${khala_data_path_default%/}"
