@@ -205,6 +205,9 @@ function phala_scripts_config_set() {
   # check base
   phala_scripts_check_dependencies
 
+  # check sgxdevice
+  phala_scripts_check_sgxdevice
+
   # print env
   phala_scripts_log info "\t\t\t\t\t[ ${_phala_env} ]"
 
