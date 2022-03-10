@@ -63,10 +63,6 @@ phala_scripts_config_default() {
 
   # source env
   [ -f "${phala_scripts_docker_envf}" ] && export $(sed '/MNEMONIC=/d' ${phala_scripts_docker_envf})
-  [ "${PHALA_ENV}" == "DEV" ] && {
-    # phala_scripts_public_ws=${phala_scripts_public_ws_dev}
-    phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
-  }
 
   # check user env and source data
   if [ ! -z "${NODE_VOLUMES}" ];then
@@ -188,6 +184,7 @@ function phala_scripts_config_set() {
       _phala_env=DEV
       export phala_node_image=${phala_node_dev_image}
       export phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+      export phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
     ;;
     *)
       phala_scripts_help

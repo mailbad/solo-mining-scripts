@@ -49,6 +49,10 @@ function phala_scripts_status(){
 
   #minutes ago
   #find -type f -cmin -1
+  [ "${PHALA_ENV}" == "DEV" ] && {
+    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+    phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
+  }
 
   local balance=$(phala_scripts_status_khala free-balance ${GAS_ACCOUNT_ADDRESS})
   local balance=$(echo "scale=4;${balance}/1000000000000"|bc)
