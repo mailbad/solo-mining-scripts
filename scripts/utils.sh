@@ -27,9 +27,11 @@ function phala_scripts_utils_setlocale() {
         sudo apt -y  install language-pack-zh-hans
       fi
       export LANG="zh_CN.UTF-8"
+      export LANGUAGE="zh_CN.UTF-8"
     ;;
     US)
       export LANG="en_US.UTF-8"
+      export LANGUAGE="en_US.UTF-8"
     ;;
     *)
       export LANG="en_US.UTF-8"
@@ -40,6 +42,7 @@ function phala_scripts_utils_setlocale() {
     :
   else
     export LANG="en_US.UTF-8"
+    export LANGUAGE="en_US.UTF-8"
   fi
 }
 
