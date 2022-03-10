@@ -117,8 +117,13 @@ function phala_scripts_install_sgx() {
   fi
   phala_scripts_log info "Kernel ${_kernel_version}" cut
   phala_scripts_log info "Install Sgx device"
-  phala_scripts_install_sgx_k5_4 && \
-  phala_scripts_install_sgx_default
+  if [ -c /dev/sgx_enclave ];then
+    phala_scripts_install_sgx_default
+  else
+    phala_scripts_install_sgx_k5_4 && \
+    phala_scripts_install_sgx_default
+  fi
+
   # if [[ "${_kernel_version}" =~ "5.13" ]];then
   #   phala_scripts_install_sgx_default
   # elif [[ "${_kernel_version}" =~ "5.4" ]];then
