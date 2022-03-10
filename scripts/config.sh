@@ -64,7 +64,7 @@ phala_scripts_config_default() {
   # source env
   [ -f "${phala_scripts_docker_envf}" ] && export $(sed '/MNEMONIC=/d' ${phala_scripts_docker_envf})
   [ "${PHALA_ENV}" == "DEV" ] && {
-    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+    # phala_scripts_public_ws=${phala_scripts_public_ws_dev}
     phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
   }
 
@@ -252,6 +252,9 @@ function phala_scripts_config_set() {
   # set nodename
   export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
 
+  if [ "${_phala_env}" == "DEV" ];then
+    phala_scripts_public_ws=${phala_scripts_public_ws_dev}
+  fi
 
   # set mnemonic gas_account_address
   local _mnemonic=""
