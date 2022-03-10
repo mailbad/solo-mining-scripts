@@ -201,6 +201,8 @@ function phala_scripts_config_set() {
     export phala_scripts_config_input_lang="$(phala_scripts_config_set_locale)"
     export PHALA_LANG=${phala_scripts_config_input_lang}
     phala_scripts_utils_setlocale
+  else
+    export phala_scripts_config_input_lang=${PHALA_LANG}
   fi
 
   # check base
