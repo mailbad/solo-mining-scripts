@@ -127,9 +127,13 @@ function phala_scripts_clear_logs() {
 }
 
 function phala_scripts_case() {
+  local _check_link=$(readlink /usr/local/bin/phala)
   if [ ! -L "/usr/local/bin/phala" ];then
     ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
   elif [ ! -f "/usr/local/bin/phala" ] && [ -L "/usr/local/bin/phala" ];then
+    unlink /usr/local/bin/phala
+    ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
+  elif [ -L "/usr/local/bin/phala" ] && [ "${_check_link%/*}" != "${phala_scripts_dir}" ];then
     unlink /usr/local/bin/phala
     ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
   fi
