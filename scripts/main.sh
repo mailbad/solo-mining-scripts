@@ -102,7 +102,7 @@ function phala_scripts_uninstall() {
     phala_scripts_log info "Uninstall phala node sucess" cut
   else
     phala_scripts_log info "Uninstall phala node sucess" cut
-    phala_scripts_log info "\t\t\t\t\t Delete(rm -rf)\n \t\t\t\t\t Script Dir: [ ${phala_scripts_dir} ]\n \t\t\t\t\t Phala Data Dir: [ ${khala_data_path_default} ]" cut
+    phala_scripts_log info "\t\t\t\t\t Delete(rm -rf) \n \t\t\t\t\t Phala Data Dir: [ ${khala_data_path_default} ]" cut
   fi
 }
 
