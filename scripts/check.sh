@@ -68,8 +68,8 @@ function phala_scripts_check_sgxdevice() {
   ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file} 2>&1
   _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
-  _sgx_aems_service=$(awk '/ AESM service$/ {print $1}' ${_sgx_msg_file})
   _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
+  _sgx_error_help=$(awk '!/AESM service/ {print}' ${_sgx_msg_file} | awk -F':' '/^help/ {print $1}'|wc -l )
 
   # 'help: SGX system software > Able to launch enclaves > Debug mode' error msg
   # _sgx_launch_enclaves=$(awk '/Able to launch enclaves/ {print $1}' ${_sgx_msg_file})
@@ -81,7 +81,8 @@ function phala_scripts_check_sgxdevice() {
   #   phala_scripts_log error "RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
   # fi
 
-  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ ! -z "${_sgx_msg_device_path}" ];then
+  # if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ ! -z "${_sgx_msg_device_path}" ];then
+  if [ ${_sgx_cpu_support_number} -gt 1 ] && [ "${_sgx_libsgx_encalve}" == "yes" ] && [ ! -z "${_sgx_msg_device_path}" ] && [ ${_sgx_error_help} -eq 0 ];then
     :
   else
     # install
@@ -89,19 +90,22 @@ function phala_scripts_check_sgxdevice() {
   fi
 
 
-  if [ "${_sgx_aems_service}" == "yes" ];then
-    :
-  else
-    dpkg --list|grep -i sgx-aesm-service >/dev/null 2>&1
-    [ $? -eq 0 ] && systemctl start aesmd || phala_scripts_install_sgx
-    sleep 1
-  fi
+  # disable aesm install and check
+  # _sgx_aems_service=$(awk '/ AESM service$/ {print $1}' ${_sgx_msg_file})
+  # if [ "${_sgx_aems_service}" == "yes" ];then
+  #   :
+  # else
+  #   dpkg --list|grep -i sgx-aesm-service >/dev/null 2>&1
+  #   [ $? -eq 0 ] && systemctl start aesmd || phala_scripts_install_sgx
+  #   sleep 1
+  # fi
 
   ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file}
   _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
-  _sgx_error_help=$(awk -F':' '/SGX system software >/ {print $1}' ${_sgx_msg_file})
+  # _sgx_error_help=$(awk -F':' '/SGX system software >/ {print $1}' ${_sgx_msg_file})
+  _sgx_error_help=$(awk '!/AESM service/ {print}' ${_sgx_msg_file} | awk -F':' '/^help/ {print $1}'|wc -l )
   # if [ ! -z "${_sgx_msg_device_path}" ];then
-  if [ -z "${_sgx_msg_device_path}" ] || [ "${_sgx_error_help}" == "help" ];then
+  if [ -z "${_sgx_msg_device_path}" ] || [ ${_sgx_error_help} -ne 0 ];then
     phala_scripts_log warn "\t RUN [ ${phala_scripts_tools_dir}/sgx-detect ]"
     phala_scripts_log error "The driver file was not found, please check the driver installation logs!"
   fi

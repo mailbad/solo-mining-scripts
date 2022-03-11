@@ -10,11 +10,6 @@ function phala_scripts_install_aptdependencies() {
 
   _default_soft=$*
   phala_scripts_log info "Apt update" cut
-  # modify cn 
-  if [ "${PHALA_LANG}" == "CN" ];then
-    [ -f /etc/apt/sources.list.phala.bak ] && cp -arf  /etc/apt/sources.list /etc/apt/sources.list.phala.bak
-    sed -i 's#http://.*archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
-  fi
   apt update
   if [ $? -ne 0 ]; then
     phala_scripts_log error "Apt update failed."
@@ -36,6 +31,9 @@ function phala_scripts_install_otherdependencies(){
             apt autoremove -y docker-ce
             find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
           ;;
+          docker-compose)
+            [ -f /usr/local/bin/docker-compose ] && rm -rf /usr/local/bin/docker-compose
+          ;;
           node)
             apt autoremove -y nodejs
             find /etc/apt/sources.list.d -type f -name nodesource.list* -exec rm -f {} \;
@@ -55,34 +53,45 @@ function phala_scripts_install_otherdependencies(){
     if ! type $_package >/dev/null 2>&1;then
       case $_package in
         docker-compose)
-          # find /etc/apt/sources.list.d -type f -name docker.list.* -exec rm -f {} \;
-          # if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
-          #   curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
-          # fi
+          if [ ! -f /usr/local/bin/docker-compose ];then
+            [ "${PHALA_LANG}" == "CN" ] && {
+              curl -L "https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            } || {
+              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            }
+          fi
+          chmod +x /usr/local/bin/docker-compose
+        ;;
+        docker)
+          find /etc/apt/sources.list.d -type f -name docker.list.* -exec rm -f {} \;
+          if [ ! -f "${phala_scripts_tools_dir}/get-docker.sh" ];then
+            curl -fsSL get.docker.com -o ${phala_scripts_tools_dir}/get-docker.sh
+          fi
 
-          # if [ ! type docker >/dev/null 2>&1 ];then
-          #   # set cn 
-          #   if [ "${PHALA_LANG}" == "CN" ];then
-          #     bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
-          #     systemctl stop docker.socket
-          #     [ -d /etc/docker ] || mkdir /etc/docker  
+          # set cn
+          if [ "${PHALA_LANG}" == "CN" ];then
+            bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
+
+            # # disable cn; error
+            # systemctl stop docker.socket
+            # [ -d /etc/docker ] || mkdir /etc/docker  
+            # printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
+            # systemctl start docker.socket
+            
+          else
+            bash ${phala_scripts_tools_dir}/get-docker.sh
+          fi
+
+          # set cn 
+          # [ type ${_package} >/dev/null 2>&1 ] && continue
+          # apt install -y docker docker-compose && \
+          # systemctl disable docker.socket
+          # systemctl disable docker.service
+          # if [ "${PHALA_LANG}" == "CN" ];then
+          #     systemctl stop docker.socket  
           #     printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
           #     systemctl start docker.socket
-          #   else
-          #     ${phala_scripts_tools_dir}/get-docker.sh
-          #   fi
           # fi
-          
-          # set cn 
-          [ type ${_package} >/dev/null 2>&1 ] && continue
-          apt install -y docker docker-compose && \
-          systemctl disable docker.socket
-          systemctl disable docker.service
-          if [ "${PHALA_LANG}" == "CN" ];then
-              systemctl stop docker.socket  
-              printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
-              systemctl start docker.socket
-          fi
 
         ;;
         node)
@@ -140,7 +149,9 @@ function phala_scripts_install_sgx_default() {
   curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
   add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
   # reinstall : fix apt upgrade
-  apt reinstall -y libsgx-enclave-common sgx-aesm-service
+  # 21.10 sgx-aesm-service error skip aesm
+  # apt reinstall -y libsgx-enclave-common sgx-aesm-service
+  apt reinstall -y libsgx-enclave-common
 }
 
 function phala_scripts_install_sgx_k5_4(){

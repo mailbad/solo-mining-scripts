@@ -11,7 +11,6 @@ services:
     - "9945:9945"
     - "30333:30333"
     - "30334:30334"
-   restart: always
    environment:
     - NODE_NAME=${NODE_NAME}
     - NODE_ROLE=MINER
@@ -25,7 +24,6 @@ services:
    ports:
     - "8000:8000"
    devices:phala_template_ymlvalue
-   restart: always
    environment:
     - EXTRA_OPTS=--cores=${CORES}
     - ROCKET_ADDRESS=0.0.0.0

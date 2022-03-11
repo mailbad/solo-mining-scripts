@@ -3,6 +3,7 @@ phala_scripts_version=v0.2.0
 
 phala_scripts_support_system=(
   "Ubuntu 20.04"
+  "Ubuntu 21.10"
 )
 phala_scripts_support_kernel=(
   "5.4"
@@ -20,7 +21,7 @@ phala_scripts_dependencies_default_soft=(
 
 # docker-compose: docker + docker-compose
 phala_scripts_dependencies_other_soft=(
-  docker-compose node
+  docker docker-compose node
 )
 
 export phala_scripts_version \

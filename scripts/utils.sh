@@ -24,7 +24,12 @@ function phala_scripts_utils_setlocale() {
       if $(localectl list-locales 2>/dev/null |grep -i zh_CN >/dev/null 2>&1);then
         :
       else
-        sudo apt -y  install language-pack-zh-hans
+        # modify cn 
+        [ -f /etc/apt/sources.list.phala.bak ] && cp -arf  /etc/apt/sources.list /etc/apt/sources.list.phala.bak
+        sed -i 's#http://.*archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
+        apt -y  install language-pack-zh-hans || {
+          apt update && apt -y  install language-pack-zh-hans
+        }
       fi
       export LANG="zh_CN.UTF-8"
       export LANGUAGE="zh_CN.UTF-8"
