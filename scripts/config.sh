@@ -348,7 +348,8 @@ function phala_scripts_config_set() {
 
   # start all service
   phala_scripts_stop_container
-  phala_scripts_case start
+  phala_scripts_config_default
+  phala_scripts_start
   
   # print sucess
   phala_scripts_log info "Set success" cut
