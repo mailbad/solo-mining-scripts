@@ -56,10 +56,10 @@ function phala_scripts_install_otherdependencies(){
           if [ ! -f /usr/local/bin/docker-compose ];then
             if [ "${PHALA_LANG}" == "CN" ];then
               curl -L "https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ${phala_scripts_tmp_dir}/docker-compose && \
-              mv ${phala_scripts_tmp_dir}/docker-compose  docker-compose /usr/local/bin/
+              mv ${phala_scripts_tmp_dir}/docker-compose /usr/local/bin/
             else
               curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ${phala_scripts_tmp_dir}/docker-compose && \
-              mv ${phala_scripts_tmp_dir}/docker-compose  docker-compose /usr/local/bin/
+              mv ${phala_scripts_tmp_dir}/docker-compose /usr/local/bin/
             fi
           fi
           chmod +x /usr/local/bin/docker-compose
