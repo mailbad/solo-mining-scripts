@@ -147,12 +147,12 @@ function phala_scripts_install_sgx() {
 function phala_scripts_install_sgx_default() {
   # install aesm encalave
   curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
-  add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
+  add-apt-repository -y "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
   # reinstall : fix apt upgrade
   # 21.10 sgx-aesm-service error skip aesm
   # apt reinstall -y libsgx-enclave-common sgx-aesm-service
-  apt autoremove -y libsgx-enclave-common
-  apt install -y libsgx-enclave-common
+  apt reinstall -y libsgx-enclave-common
+
 }
 
 function phala_scripts_install_sgx_k5_4(){
