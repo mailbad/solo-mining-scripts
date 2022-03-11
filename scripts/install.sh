@@ -28,7 +28,7 @@ function phala_scripts_install_otherdependencies(){
       else
         case $_package in
           docker)
-            apt autoremove -y docker-ce
+            apt autoremove -y docker-ce docker-ce-cli
             find /etc/apt/sources.list.d -type f -name docker.list* -exec rm -f {} \;
           ;;
           docker-compose)
@@ -151,7 +151,8 @@ function phala_scripts_install_sgx_default() {
   # reinstall : fix apt upgrade
   # 21.10 sgx-aesm-service error skip aesm
   # apt reinstall -y libsgx-enclave-common sgx-aesm-service
-  apt reinstall -y libsgx-enclave-common
+  apt autoremove -y libsgx-enclave-common
+  apt install -y libsgx-enclave-common
 }
 
 function phala_scripts_install_sgx_k5_4(){
