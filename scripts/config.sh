@@ -3,10 +3,12 @@ phala_scripts_version=v0.2.0
 
 phala_scripts_support_system=(
   "Ubuntu 20.04"
+  "Ubuntu 21.04"
   "Ubuntu 21.10"
 )
 phala_scripts_support_kernel=(
   "5.4"
+  "5.11"
   "5.13"
 )
 

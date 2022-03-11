@@ -72,8 +72,7 @@ function phala_scripts_install_otherdependencies(){
 
           # set cn
           if [ "${PHALA_LANG}" == "CN" ];then
-            bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun
-
+            bash ${phala_scripts_tools_dir}/get-docker.sh --mirror Aliyun || :
             # # disable cn; error
             # systemctl stop docker.socket
             # [ -d /etc/docker ] || mkdir /etc/docker  
@@ -81,8 +80,9 @@ function phala_scripts_install_otherdependencies(){
             # systemctl start docker.socket
             
           else
-            bash ${phala_scripts_tools_dir}/get-docker.sh
+            bash ${phala_scripts_tools_dir}/get-docker.sh || :
           fi
+          type docker || phala_scripts_log "Docker Install Fail"
         ;;
         node)
           find /etc/apt/sources.list.d -type f -name 'nodesource.list.*' -exec rm -f {} \;

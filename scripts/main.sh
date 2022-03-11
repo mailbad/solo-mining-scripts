@@ -137,6 +137,8 @@ function phala_scripts_case() {
     unlink /usr/local/bin/phala
     ln -s ${phala_scripts_dir}/phala.sh /usr/local/bin/phala
   fi
+  [ -x ${phala_scripts_dir}/phala.sh ] || chmod +x ${phala_scripts_dir}/phala.sh
+  
   [ $(echo $1|grep -E "^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install|config)
