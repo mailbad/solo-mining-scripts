@@ -9,10 +9,6 @@
 . ${phala_scripts_dir}/scripts/status.sh
 
 function phala_scripts_help(){
-# "		<dcap>				install DCAP driver\n"\
-# "		<isgx>				install isgx driver\n"\
-# "	score-test\n"\
-# "		<Parameter>			get the scores of your machine"
 phala_scripts_utils_gettext "Usage:\n"\
 "	phala [OPTION]...\n"\
 "\n"\
@@ -26,7 +22,6 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<node>				stop phala-node container\n"\
 "		<pruntime>			stop phala-pruntime container\n"\
 "		<pherry>			stop phala-pherry container\n"\
-"		<bench>				stop phala-pruntime-bench container\n"\
 "	config\n"\
 "		<show>				display all configuration of your node\n"\
 "		<set>				set all configuration\n"\
@@ -38,40 +33,15 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<node>				print phala-node logs information\n"\
 "		<pruntime>			print phala-pruntime logs information\n"\
 "		<pherry>			print phala-pherry logs information\n"\
-"		<bench>				print phala-pruntime-bench logs information\n"\
 "	sgx-test				start the mining test program\n"
 
 }
 
 function phala_scripts_start() {
   phala_scripts_check_envf
-  # phala_scripts_check_ymlf
   phala_scripts_config_dockeryml
   phala_scripts_utils_docker up -d
 }
-
-# function phala_scripts_stop_logs() {
-#   phala_scripts_check_envf
-#   phala_scripts_check_ymlf
-#   local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${2}$")
-#   if [ -z "$2" ] && [ "$1" == "stop" ];then
-#     phala_scripts_utils_docker stop
-#     phala_scripts_utils_docker rm -f
-#   elif [[ ! -z ${_container_name} ]] && [ "$1" == "stop" ];then
-#     phala_scripts_utils_docker stop ${_container_name}
-#     phala_scripts_utils_docker rm -f ${_container_name}
-#   elif [ -z "$2" ] && [ "$1" == "logs" ];then
-#     phala_scripts_utils_docker logs -f --tail 50
-#   elif [[ ! -z ${_container_name} ]] && [ "$1" == "logs" ];then
-#     phala_scripts_utils_docker logs -f --tail 50 ${_container_name}
-#   elif [ -z "$2" ] && [ "$1" == "ps" ];then
-#     phala_scripts_utils_docker ps
-#   elif [[ ! -z ${_container_name} ]] && [ "$1" == "ps" ];then
-#     phala_scripts_utils_docker ps ${_container_name}
-#   else
-#     phala_scripts_help
-#   fi
-# }
 
 function phala_scripts_ps_container() {
   phala_scripts_check_envf
@@ -87,11 +57,6 @@ function phala_scripts_ps_container() {
 }
 
 function phala_scripts_stop_container() {
-  # [ "$1" == "uninstall" ] || {
-  #   phala_scripts_check_envf
-  #   phala_scripts_check_ymlf
-  #   shift
-  # }
   local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf} 2>/dev/null|grep "\-${1}$")
   if [ -z "$1" ];then
     phala_scripts_utils_docker stop
@@ -102,6 +67,13 @@ function phala_scripts_stop_container() {
   else
     phala_scripts_help
   fi
+}
+
+function phala_scripts_remove_dockerimage() {
+  local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf} 2>/dev/null)
+  for _dockerimage in ${_container_name};do
+    docker image rm ${_dockerimage}
+  done
 }
 
 function phala_scripts_logs_container() {
@@ -122,12 +94,16 @@ function phala_scripts_uninstall() {
   phala_scripts_install_aptdependencies uninstall "${phala_scripts_dependencies_default_soft[@]}"
   phala_scripts_install_otherdependencies uninstall "${phala_scripts_dependencies_other_soft[@]}"
   phala_scripts_install_sgx uninstall
-  # test delete
   [ -L "/usr/local/bin/phala" ] && unlink /usr/local/bin/phala
-  # mv ${phala_scripts_dir} ${phala_scripts_dir}.movetest
   chattr -i -R ${phala_scripts_conf_dir} ${phala_scripts_temp_dir} >/dev/null 2>&1
-  phala_scripts_log info "Uninstall phala node sucess" cut
-  phala_scripts_log info "\t\t\t\t\t Delete(rm -rf)\n \t\t\t\t\t Script Dir: [ ${phala_scripts_dir} ]\n \t\t\t\t\t Phala Data Dir: [ ${khala_data_path_default} ]" cut
+  rm -rf ${phala_scripts_dir} || :
+  if [ "$1" == "clear" ];then
+    rm -rf ${${khala_data_path_default}} || :
+    phala_scripts_log info "Uninstall phala node sucess" cut
+  else
+    phala_scripts_log info "Uninstall phala node sucess" cut
+    phala_scripts_log info "\t\t\t\t\t Delete(rm -rf)\n \t\t\t\t\t Script Dir: [ ${phala_scripts_dir} ]\n \t\t\t\t\t Phala Data Dir: [ ${khala_data_path_default} ]" cut
+  fi
 }
 
 function phala_scripts_clear_logs() {
@@ -158,12 +134,6 @@ function phala_scripts_case() {
   [ $(echo $1|grep -E "^start$|^presync$|^stop$|^status$|^logs$|^ps$|^sgx-test$"|wc -l) -eq 1 ] && phala_scripts_check_dependencies
   case "$1" in
     install|config)
-      # if [ "$1" == "install" ];then
-      #   if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
-      #     phala_scripts_log info "Skip Install..."
-      #     return 0
-      #   fi
-      # fi
       shift
       phala_scripts_config_set $*
     ;;
@@ -209,6 +179,7 @@ function phala_scripts_case() {
     ;;
     uninstall)
       phala_scripts_stop_container || :
+      phala_scripts_remove_dockerimage || :
       phala_scripts_uninstall
     ;;
     sgx-test)

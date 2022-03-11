@@ -54,11 +54,13 @@ function phala_scripts_install_otherdependencies(){
       case $_package in
         docker-compose)
           if [ ! -f /usr/local/bin/docker-compose ];then
-            [ "${PHALA_LANG}" == "CN" ] && {
-              curl -L "https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            } || {
-              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            }
+            if [ "${PHALA_LANG}" == "CN" ];then
+              curl -L "https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ${phala_scripts_tmp_dir}/docker-compose && \
+              mv ${phala_scripts_tmp_dir}/docker-compose  docker-compose /usr/local/bin/
+            else
+              curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o ${phala_scripts_tmp_dir}/docker-compose && \
+              mv ${phala_scripts_tmp_dir}/docker-compose  docker-compose /usr/local/bin/
+            fi
           fi
           chmod +x /usr/local/bin/docker-compose
         ;;
@@ -81,18 +83,6 @@ function phala_scripts_install_otherdependencies(){
           else
             bash ${phala_scripts_tools_dir}/get-docker.sh
           fi
-
-          # set cn 
-          # [ type ${_package} >/dev/null 2>&1 ] && continue
-          # apt install -y docker docker-compose && \
-          # systemctl disable docker.socket
-          # systemctl disable docker.service
-          # if [ "${PHALA_LANG}" == "CN" ];then
-          #     systemctl stop docker.socket  
-          #     printf '{\n  "registry-mirrors": [\n    "https://docker.mirrors.ustc.edu.cn"\n  ]\n}' > /etc/docker/daemon.json
-          #     systemctl start docker.socket
-          # fi
-
         ;;
         node)
           find /etc/apt/sources.list.d -type f -name 'nodesource.list.*' -exec rm -f {} \;
@@ -156,12 +146,9 @@ function phala_scripts_install_sgx_default() {
 }
 
 function phala_scripts_install_sgx_k5_4(){
-  # curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
-  # add-apt-repository -y "deb https://download.fortanix.com/linux/apt xenial main"  && \
-  # apt install -y intel-sgx-dkms
-
   [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
-    curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
+    curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin && \
+    mv ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ${phala_scripts_tools_dir}/
   }
   bash ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
 }

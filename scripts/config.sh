@@ -12,7 +12,7 @@ phala_scripts_support_kernel=(
 
 phala_scripts_support_language=(
   "US" "English"
-  "CN" "中文"
+  "CN" "Chinese"
 )
 
 phala_scripts_dependencies_default_soft=(
@@ -307,12 +307,6 @@ function phala_scripts_config_set() {
     khala_data_path_default="${khala_data_path_default%/}"
   fi
 
-  # stop all service
-  # 2022 0308: docker-compose up -d auto start
-  # if [ -f "${phala_scripts_docker_envf}" ] && [ -L "${phala_scripts_dir}/docker-compose.yml" ];then
-  #   phala_scripts_case stop
-  # fi
-
   # save conf as env file
   [ -f ${phala_scripts_docker_envf} ] && chattr -i ${phala_scripts_docker_envf}
   sed -e "s#NODE_IMAGE=.*#NODE_IMAGE=${phala_node_image}#g" \
@@ -341,12 +335,12 @@ function phala_scripts_config_set() {
   # run config docker-compose.yml update sgx device
   phala_scripts_config_dockeryml
 
-  # print sucess
-  phala_scripts_log info "Set success" cut
-
   # start all service
   phala_scripts_stop_container
   phala_scripts_case start
+  
+  # print sucess
+  phala_scripts_log info "Set success" cut
 
 }
 
