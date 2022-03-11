@@ -24,6 +24,9 @@ phala_scripts_dependencies_other_soft=(
   docker docker-compose node
 )
 
+phala_pro_msg="MAINNET"
+phala_dev_msg="TESTNET"
+
 export phala_scripts_version \
        phala_scripts_support_system \
        phala_scripts_support_kernel \
@@ -70,7 +73,7 @@ phala_scripts_config_default() {
     local _data_path=${NODE_VOLUMES%:*}
     # khala_data_path_default=${_data_path%/[dev pro]*}
     # khala_data_path_default=${_data_path%_[dev pro]*}
-    [ "${PHALA_ENV}" == "DEV" ] && khala_data_path_default=${_data_path%_dev/*} || khala_data_path_default=${_data_path%/*}
+    [ "${PHALA_ENV}" == "${phala_dev_msg}" ] && khala_data_path_default=${_data_path%_dev/*} || khala_data_path_default=${_data_path%/*}
   fi
   
   export phala_scripts_sgxtest_image \
@@ -166,7 +169,7 @@ function phala_scripts_config_set_locale() {
 function phala_scripts_config_set() {
   # Usage: show locale dev 
 
-  local _phala_env=PRO
+  local _phala_env=${phala_pro_msg}
 
   case $1 in
     '')
@@ -188,8 +191,8 @@ function phala_scripts_config_set() {
       phala_scripts_log info "Set success" cut
       return 0
     ;;
-    dev)
-      _phala_env=DEV
+    dev|testnet)
+      _phala_env=${phala_dev_msg}
       export phala_node_image=${phala_node_dev_image}
       export phala_scripts_public_ws=${phala_scripts_public_ws_dev}
       export phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
@@ -262,7 +265,7 @@ function phala_scripts_config_set() {
   # set nodename
   export phala_scripts_config_input_nodename=$(phala_scripts_config_set_nodename)
 
-  if [ "${_phala_env}" == "DEV" ];then
+  if [ "${_phala_env}" == "${phala_dev_msg}" ];then
     phala_scripts_public_ws=${phala_scripts_public_ws_dev}
   fi
 
@@ -308,8 +311,9 @@ function phala_scripts_config_set() {
   khala_data_path_default=$(phala_scripts_utils_read "Enter your Khala DATA PATH"  "${khala_data_path_default}")
   
   # khala_data_path_default="${khala_data_path_default%/}/$(echo -en ${_phala_env}|tr A-Z a-z)"
-  if [ "${_phala_env}" == "DEV" ];then
-    khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
+  if [ "${_phala_env}" == "${phala_dev_msg}" ];then
+    # khala_data_path_default="${khala_data_path_default%/}_$(echo -en ${_phala_env}|tr A-Z a-z)"
+    khala_data_path_default="${khala_data_path_default%/}_dev"
   else
     khala_data_path_default="${khala_data_path_default%/}"
   fi

@@ -100,7 +100,7 @@ function phala_scripts_uninstall() {
   rm -rf ${phala_scripts_dir}
   if [ "$1" == "clear" ];then
     phala_scripts_log info "Delete Phala Data: ${khala_data_path_default}" cut
-    rm -rf ${khala_data_path_default}
+    rm -rf ${khala_data_path_default} ${khala_data_path_default}
     phala_scripts_log info "Uninstall phala node sucess" cut
   elif [ -z "$1" ];then
     phala_scripts_log info "Uninstall phala node sucess" cut

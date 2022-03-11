@@ -49,7 +49,7 @@ function phala_scripts_status(){
 
   #minutes ago
   #find -type f -cmin -1
-  [ "${PHALA_ENV}" == "DEV" ] && {
+  [ "${PHALA_ENV}" == "${phala_dev_msg}" ] && {
     phala_scripts_public_ws=${phala_scripts_public_ws_dev}
     phala_scripts_kusama_ws=${phala_scripts_kusama_ws_dev}
   }
