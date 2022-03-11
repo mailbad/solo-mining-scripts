@@ -157,7 +157,7 @@ function phala_scripts_install_sgx_default() {
 
 function phala_scripts_install_sgx_k5_4(){
   # curl -sSL "https://download.fortanix.com/linux/apt/fortanix.gpg" | sudo -E apt-key add - && \
-  # add-apt-repository "deb https://download.fortanix.com/linux/apt xenial main"  && \
+  # add-apt-repository -y "deb https://download.fortanix.com/linux/apt xenial main"  && \
   # apt install -y intel-sgx-dkms
 
   [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
