@@ -19,6 +19,11 @@ function phala_scripts_trap() {
 function phala_scripts_utils_setlocale() {
   export TEXTDOMAINDIR=${phala_scripts_dir}/locale
   export TEXTDOMAIN=phala
+  if [[ "$(tty)" =~ "pts" ]];then
+    :
+  else
+    PHALA_LANG=US
+  fi
   case "${PHALA_LANG}" in
     CN)
       if $(localectl list-locales 2>/dev/null |grep -i zh_CN >/dev/null 2>&1);then

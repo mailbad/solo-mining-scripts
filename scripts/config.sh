@@ -136,6 +136,13 @@ function phala_scripts_config_set_nodename() {
 }
 
 function phala_scripts_config_set_locale() {
+  if [[ "$(tty)" =~ "pts" ]];then
+    :
+  else
+    export PHALA_LANG=US
+    echo US
+    return 0
+  fi
   # set locale
   if [ "${PHALA_LANG}" == "CN" ] || [ "${PHALA_LANG}" == "US" ];then
     _phala_scripts_utils_printf_value="${PHALA_LANG}"
