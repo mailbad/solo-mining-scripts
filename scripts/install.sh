@@ -105,7 +105,8 @@ function phala_scripts_install_sgx() {
     phala_scripts_log info "Uninstall Install Sgx device" cut
 
     # frist uninstall
-    apt autoremove -y libsgx-enclave-common sgx-aesm-service
+    # apt autoremove -y libsgx-enclave-common sgx-aesm-service
+    apt autoremove -y libsgx-enclave-common dkms
     # [ -c /dev/sgx_enclave ]
     [ -f /opt/intel/sgxdriver/uninstall.sh ] && bash /opt/intel/sgxdriver/uninstall.sh
     # [[ "${_kernel_version}" =~ "5.4" ]] && apt autoremove -y intel-sgx-dkms
@@ -118,9 +119,11 @@ function phala_scripts_install_sgx() {
   phala_scripts_log info "Install Sgx device"
   if [ -c /dev/sgx_enclave ];then
     phala_scripts_install_sgx_default
-  else
+  elif [ ${DISTRIB_RELEASE} == "20.04" ];then
     phala_scripts_install_sgx_k5_4 && \
     phala_scripts_install_sgx_default
+  elif [ ${DISTRIB_RELEASE} == "18.04" ];then
+    phala_scripts_install_sgx_k5_4
   fi
 
   # if [[ "${_kernel_version}" =~ "5.13" ]];then
@@ -141,14 +144,21 @@ function phala_scripts_install_sgx_default() {
   # reinstall : fix apt upgrade
   # 21.10 sgx-aesm-service error skip aesm
   # apt reinstall -y libsgx-enclave-common sgx-aesm-service
-  apt reinstall -y libsgx-enclave-common
+  apt autoremove -y libsgx-enclave-common
+  apt install -y libsgx-enclave-common 
 
 }
 
 function phala_scripts_install_sgx_k5_4(){
-  [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
-    curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin && \
-    mv ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ${phala_scripts_tools_dir}/
-  }
-  bash ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
+  type make dkms || apt install -y make dkms
+  # [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ] || {
+    # curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_2.11.0_2d2b795.bin -o ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin && \
+    # mv ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin ${phala_scripts_tools_dir}/
+  # }
+  # bash ${phala_scripts_tools_dir}/sgx_linux_x64_driver_2.11.0_2d2b795.bin
+  [ -f ${phala_scripts_tools_dir}/sgx_linux_x64_driver_1.41.bin ] || {
+    curl -fsSL https://download.01.org/intel-sgx/latest/linux-latest/distro/ubuntu20.04-server/sgx_linux_x64_driver_1.41.bin -o ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_1.41.bin && \
+    mv ${phala_scripts_tmp_dir}/sgx_linux_x64_driver_1.41.binn ${phala_scripts_tools_dir}/
+    }
+  bash ${phala_scripts_tools_dir}/sgx_linux_x64_driver_1.41.bin
 }

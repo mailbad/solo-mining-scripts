@@ -68,6 +68,7 @@ function phala_scripts_check_sgxdevice() {
   ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file} 2>&1
   _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
+  [ "${DISTRIB_RELEASE}" == "18.04" ] && _sgx_libsgx_encalve=yes
   _sgx_msg_device_path=$(awk -F "[()]" '/SGX kernel device/ {print $2}' ${_sgx_msg_file})
   _sgx_error_help=$(awk '!/AESM service/ {print}' ${_sgx_msg_file} | awk -F':' '/^help/ {print $1}'|wc -l )
 
@@ -89,6 +90,8 @@ function phala_scripts_check_sgxdevice() {
     phala_scripts_install_sgx
   fi
 
+  # test 0312 system ubuntu 18.04 kernel 4.15
+  # awk '/all set to start running SGX programs/ {print}'
 
   # disable aesm install and check
   # _sgx_aems_service=$(awk '/ AESM service$/ {print $1}' ${_sgx_msg_file})
