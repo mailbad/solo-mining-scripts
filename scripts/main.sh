@@ -96,11 +96,13 @@ function phala_scripts_uninstall() {
   phala_scripts_install_sgx uninstall
   [ -L "/usr/local/bin/phala" ] && unlink /usr/local/bin/phala
   chattr -i -R ${phala_scripts_conf_dir} ${phala_scripts_temp_dir} >/dev/null 2>&1
-  rm -rf ${phala_scripts_dir} || :
+  phala_scripts_log info "Delete Phala Scripts: ${phala_scripts_dir}" cut
+  rm -rf ${phala_scripts_dir}
   if [ "$1" == "clear" ];then
-    rm -rf ${${khala_data_path_default}} || :
+    phala_scripts_log info "Delete Phala Data: ${khala_data_path_default}" cut
+    rm -rf ${khala_data_path_default}
     phala_scripts_log info "Uninstall phala node sucess" cut
-  else
+  elif [ -z "$1" ];then
     phala_scripts_log info "Uninstall phala node sucess" cut
     phala_scripts_log info "\t\t\t\t\t Delete(rm -rf) \n \t\t\t\t\t Phala Data Dir: [ ${khala_data_path_default} ]" cut
   fi
@@ -178,9 +180,11 @@ function phala_scripts_case() {
       phala_scripts_ps_container
     ;;
     uninstall)
-      phala_scripts_stop_container || :
-      phala_scripts_remove_dockerimage || :
-      phala_scripts_uninstall
+      set +e
+      phala_scripts_stop_container
+      phala_scripts_remove_dockerimage
+      shift
+      phala_scripts_uninstall $*
     ;;
     sgx-test)
       phala_scripts_check_sgxtest
