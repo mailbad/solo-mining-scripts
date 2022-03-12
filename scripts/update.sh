@@ -35,7 +35,7 @@ function phala_scripts_update_script() {
 }
 
 function phala_scripts_update() {
-  case in $1
+  case $1 in
     script)
       phala_scripts_update_script $*
     ;;
