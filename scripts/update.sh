@@ -23,16 +23,28 @@ function phala_scripts_update_script() {
   local _update_txt_domain=""
   local _get_new_vesion="$(dig txt ${_update_txt_domain} +short | sed 's#"##g')"
   if [ "${_get_new_vesion}" == "${phala_scripts_version}" ] && [ "$1" != "now" ];then
+    phala_scripts_log info "version is up to date" cut
     return 0
   fi
   phala_scripts_log info "Update phala script" cut
-  local _update_tmp_dir="${phala_scripts_tmp_dir}/phala_update_$(date +%s)"
-  curl -fsSL ${phala_scripts_update_url} -o ${phala_scripts_tmp_dir}/update_phala-main.zip && \
-  unzip ${phala_scripts_tmp_dir}/update_phala-main.zip -d ${_update_tmp_dir}
+  local _get_nowtime="$(date +%s)"
+  local _download_file_path="${phala_scripts_tmp_dir}/update_phala_${_get_nowtime}.zip"
+  local _update_tmp_dir="${phala_scripts_tmp_dir}/phala_update_${_get_nowtime}"
+
+  trap "rm -rf ${_download_file_path} ${_update_tmp_dir}" EXIT
+
+  curl -fsSL ${phala_scripts_update_url} -o ${_download_file_path} && {
+    unzip ${_download_file_path} -d ${_update_tmp_dir}
+  } || {
+    phala_scripts_log error "Update Fail" cut
+  }
   local _get_update_dir=$(find ${_update_tmp_dir} -maxdepth 1 -type d |sed 1d)
+  # cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
   echo cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
   phala_scripts_log info "Update success" cut
-  rm -rf ${phala_scripts_tmp_dir}/update_phala-main.zip ${_update_tmp_dir}
+
+  # rm -rf ${phala_scripts_tmp_dir}/update_phala-main.zip ${_update_tmp_dir}
+  
 }
 
 function phala_scripts_update() {
