@@ -43,6 +43,7 @@ Options:
 	status								查看挖矿套件运行状态
 	update			 					未实现
 	logs								打印所有容器日志信息
-		<clear>	< node | pruntime | pherry >			清理日志
-		< node | pruntime | pherry >
+		< node | pruntime | pherry >	
+		<clean>							清理日志 
+			< node | pruntime | pherry >			
 	sgx-test							运行挖矿测试程序

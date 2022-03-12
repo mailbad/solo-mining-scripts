@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 phala_scripts_version=v0.2.0
+phala_scripts_update_url="https://github.com/Phala-Network/solo-mining-scripts/archive/main.zip"
 
 phala_scripts_support_system=(
   "Ubuntu 18.04"
@@ -35,7 +36,9 @@ export phala_scripts_version \
        phala_scripts_support_system \
        phala_scripts_support_kernel \
        phala_scripts_dependencies_default_soft \
-       phala_scripts_dependencies_other_soft
+       phala_scripts_dependencies_other_soft \
+       phala_pro_msg \
+       phala_dev_msg
 
 phala_scripts_config_default() {
 

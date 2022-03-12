@@ -7,6 +7,7 @@
 . ${phala_scripts_dir}/scripts/check.sh
 . ${phala_scripts_dir}/scripts/install.sh
 . ${phala_scripts_dir}/scripts/status.sh
+. ${phala_scripts_dir}/scripts/update.sh
 
 function phala_scripts_help(){
 phala_scripts_utils_gettext "Usage:\n"\
@@ -98,7 +99,7 @@ function phala_scripts_uninstall() {
   chattr -i -R ${phala_scripts_conf_dir} ${phala_scripts_temp_dir} >/dev/null 2>&1
   phala_scripts_log info "Delete Phala Scripts: ${phala_scripts_dir}" cut
   rm -rf ${phala_scripts_dir}
-  if [ "$1" == "clear" ];then
+  if [ "$1" == "clean" ];then
     phala_scripts_log info "Delete Phala Data: ${khala_data_path_default}" cut
     rm -rf ${khala_data_path_default} ${khala_data_path_default}_dev
     phala_scripts_log info "Uninstall phala node sucess" cut
@@ -108,7 +109,7 @@ function phala_scripts_uninstall() {
   fi
 }
 
-function phala_scripts_clear_logs() {
+function phala_scripts_clean_logs() {
   local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf}|grep "\-${1}$")
   if [ -z "$1" ];then
     _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf})
@@ -121,7 +122,7 @@ function phala_scripts_clear_logs() {
 
   for _cname in ${_container_name[@]};do
     _phala_scripts_utils_printf_value="${_cname}"
-    phala_scripts_log info "clear [ %s ] log." cut
+    phala_scripts_log info "clean [ %s ] log." cut
     truncate -s 0 $(docker inspect --format='{{.LogPath}}' ${_cname});
   done
 }
@@ -169,14 +170,15 @@ function phala_scripts_case() {
       phala_scripts_status
     ;;
     update)
-      :
+      shift
+      phala_scripts_update $*
     ;;
     logs)
       export _phala_scripts_error_trap=false
       shift
-      if [ "$1" == "clear" ];then
+      if [ "$1" == "clean" ];then
         shift
-        phala_scripts_clear_logs $*
+        phala_scripts_clean_logs $*
       else
         phala_scripts_logs_container $*
       fi
@@ -207,7 +209,6 @@ function phala_scripts_main() {
   trap "phala_scripts_trap" EXIT INT
   export _phala_scripts_error_trap=true
 
-  # return 1
   # Cannot run driectly
   if [ -z "${phala_scripts_dir}" ];then
   printf "\033[0;31m Cannot run driectly \033[0m\n"
