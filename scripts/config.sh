@@ -18,7 +18,7 @@ phala_scripts_support_kernel=(
 
 phala_scripts_support_language=(
   "US" "English"
-  "CN" "Chinese"
+  "CN" "中文"
 )
 
 phala_scripts_dependencies_default_soft=(
