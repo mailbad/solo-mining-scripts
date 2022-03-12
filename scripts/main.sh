@@ -18,24 +18,21 @@ phala_scripts_utils_gettext "Usage:\n"\
 "	install					install your phala node\n"\
 "	uninstall				uninstall your phala scripts\n"\
 "	start					start mining\n"\
-"		<khala>				start khala-node\n"\
+"		<node | pruntime | pherry>\n"\
 "	stop					stop mining\n"\
-"		<node>				stop phala-node container\n"\
-"		<pruntime>			stop phala-pruntime container\n"\
-"		<pherry>			stop phala-pherry container\n"\
+"		<node | pruntime | pherry>\n"\
 "	config\n"\
 "		<show>				display all configuration of your node\n"\
-"		<set>				set all configuration\n"\
+"		<testnet | locale>\n"\
 "	status					display the running status of all components\n"\
 "	update					update all container,and don't clean up the container data\n"\
 "		<clean>				update all container,and clean up the container data\n"\
 "		<script>			update the script\n"\
 "	logs					print all container logs information\n"\
-"		<node>				print phala-node logs information\n"\
-"		<pruntime>			print phala-pruntime logs information\n"\
-"		<pherry>			print phala-pherry logs information\n"\
-"	sgx-test				start the mining test program\n"
-
+"		<node | pruntime | pherry>\n"\
+"		<clean>				clean log\n"\
+"	sgx-test				start the mining test program\n"\
+"	version				display script version\n"
 }
 
 function phala_scripts_start() {

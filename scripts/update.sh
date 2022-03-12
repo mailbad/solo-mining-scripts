@@ -56,7 +56,10 @@ function phala_scripts_update() {
       phala_scripts_update_script $*
     ;;
     clean)
-      :
+      phala_scripts_stop_container
+      phala_scripts_log info "Clean data" cut
+      rm -rf ${khala_data_path_default} ${khala_data_path_default}_dev
+      phala_scripts_update_container
     ;;
     *)
       phala_scripts_update_container $*
