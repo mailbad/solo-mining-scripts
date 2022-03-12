@@ -30,7 +30,7 @@ function phala_scripts_utils_setlocale() {
         :
       else
         # modify cn 
-        [ -f /etc/apt/sources.list.phala.bak ] && cp -arf  /etc/apt/sources.list /etc/apt/sources.list.phala.bak
+        [ -f /etc/apt/sources.list.phala.bak ] || cp -arf  /etc/apt/sources.list /etc/apt/sources.list.phala.bak
         # sed -i 's#http://.*archive.ubuntu.com#https://mirrors.ustc.edu.cn#g' /etc/apt/sources.list
         sed -i 's#http://.*archive.ubuntu.com#https://mirrors.163.com#g' /etc/apt/sources.list
         apt -y  install language-pack-zh-hans || {
