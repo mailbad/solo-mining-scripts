@@ -23,7 +23,8 @@ function phala_scripts_update_script() {
   local _update_txt_domain=""
   local _get_new_vesion="$(dig txt ${_update_txt_domain} +short | sed 's#"##g')"
   if [ "${_get_new_vesion}" == "${phala_scripts_version}" ] && [ "$1" != "now" ];then
-    phala_scripts_log info "version is up to date" cut
+    _phala_scripts_utils_printf_value=${phala_scripts_version}
+    phala_scripts_log info "version [ %s ] is up to date" cut
     return 0
   fi
   phala_scripts_log info "Update phala script" cut
