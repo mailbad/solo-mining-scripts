@@ -34,13 +34,14 @@ function phala_scripts_update_script() {
   trap "rm -rf ${_download_file_path} ${_update_tmp_dir}" EXIT
 
   curl -fsSL ${phala_scripts_update_url} -o ${_download_file_path} && {
-    unzip ${_download_file_path} -d ${_update_tmp_dir}
+    unzip -oq ${_download_file_path} -d ${_update_tmp_dir}
   } || {
     phala_scripts_log error "Update Fail" cut
   }
   local _get_update_dir=$(find ${_update_tmp_dir} -maxdepth 1 -type d |sed 1d)
-  # cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
-  echo cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
+  chattr -i -R ${phala_scripts_temp_dir}
+  cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
+  chattr +i -R ${phala_scripts_temp_dir}
   phala_scripts_log info "Update success" cut
 
   # rm -rf ${phala_scripts_tmp_dir}/update_phala-main.zip ${_update_tmp_dir}
