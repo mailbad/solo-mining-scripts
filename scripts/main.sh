@@ -32,7 +32,7 @@ phala_scripts_utils_gettext "Usage:\n"\
 "		<node | pruntime | pherry>\n"\
 "		<clean>				clean log\n"\
 "	sgx-test				start the mining test program\n"\
-"	version				display script version\n"
+"	version					display script version\n"
 }
 
 function phala_scripts_start() {
