@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 function phala_scripts_update_container() {
-  phala_scripts_log info "Update phala images" cut
   phala_scripts_check_envf
   phala_scripts_config_dockeryml
   local _container_name=$(awk -F':' '/container_name/ {print $NF}' ${phala_scripts_docker_ymlf} 2>/dev/null|grep "\-${1}$")
   if [ -z "$1" ];then
+    phala_scripts_log info "Update phala images" cut
     phala_scripts_utils_docker pull
   elif [ ! -z "${_container_name}" ];then
+    phala_scripts_log info "Update phala images" cut
     phala_scripts_utils_docker pull ${_container_name}
   else
     phala_scripts_help
