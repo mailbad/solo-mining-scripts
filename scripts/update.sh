@@ -19,7 +19,7 @@ function phala_scripts_update_container() {
 }
 
 function phala_scripts_update_script() {
-  type dig || apt install -y dnsutils
+  type dig >/dev/null 2>&1 || apt install -y dnsutils
   local _update_txt_domain=""
   local _get_new_vesion="$(dig txt ${_update_txt_domain} +short | sed 's#"##g')"
   if [ "${_get_new_vesion}" == "${phala_scripts_version}" ] && [ "$1" != "now" ];then
@@ -32,6 +32,7 @@ function phala_scripts_update_script() {
   local _get_update_dir=$(find ${_update_tmp_dir} -maxdepth 1 -type d |sed 1d)
   echo cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
   phala_scripts_log info "Update success" cut
+  rm -rf ${phala_scripts_tmp_dir}/update_phala-main.zip ${_update_tmp_dir}
 }
 
 function phala_scripts_update() {
