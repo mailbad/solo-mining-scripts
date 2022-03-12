@@ -25,11 +25,13 @@ function phala_scripts_update_script() {
   if [ "${_get_new_vesion}" == "${phala_scripts_version}" ] && [ "$1" != "now" ];then
     return 0
   fi
+  phala_scripts_log info "Update phala script" cut
   local _update_tmp_dir="${phala_scripts_tmp_dir}/phala_update_$(date +%s)"
   curl -fsSL ${phala_scripts_update_url} -o ${phala_scripts_tmp_dir}/update_phala-main.zip && \
   unzip ${phala_scripts_tmp_dir}/update_phala-main.zip -d ${_update_tmp_dir}
   local _get_update_dir=$(find ${_update_tmp_dir} -maxdepth 1 -type d |sed 1d)
   echo cp -arf ${_get_update_dir}/* ${phala_scripts_dir}
+  phala_scripts_log info "Update success" cut
 }
 
 function phala_scripts_update() {
