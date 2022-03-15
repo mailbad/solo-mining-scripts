@@ -360,7 +360,7 @@ function phala_scripts_config_set() {
   phala_scripts_start
   
   # print sucess
-  phala_scripts_log info "Set success" cut
+  phala_scripts_log info "Set successed" cut
 
 }
 

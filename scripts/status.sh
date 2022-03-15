@@ -2,7 +2,7 @@
 
 phala_scripts_status_msg(){
 phala_scripts_utils_gettext "Phala Status:\n"\
-"--------------------------------------------- Script version %s [ %s ] --------------------------------------\n"\
+"----------------------------------------- Script version %s [ %s ] --------------------------------------\n"\
 "	service name		service status			local node block height\n"\
 "------------------------------------------------------------------------------------------------------------------\n"\
 "	khala-node			%s				%s / %s\n"\

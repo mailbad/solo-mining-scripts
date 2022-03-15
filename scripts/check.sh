@@ -37,6 +37,7 @@ function phala_scripts_check_kernel() {
 
 function phala_scripts_check_sgxenable() {
   _sgx_enable=${phala_scripts_tools_dir}/sgx_enable
+  [ -x ${_sgx_enable} ] || chmod +x ${_sgx_enable}
   if ! $($_sgx_enable -s 2>/dev/null |grep -i 'already enabled' >/dev/null 2>&1);then
     export _phala_scripts_utils_printf_value="$_sgx_enable"
     phala_scripts_log error "Please first run [ sudo %s ]!" 
@@ -65,6 +66,7 @@ function phala_scripts_check_dependencies(){
 
 function phala_scripts_check_sgxdevice() {
   _sgx_msg_file=${phala_scripts_tmp_dir}/sgx-detect.msg
+  [ -x ${phala_scripts_tools_dir}/sgx-detect ] || chmod +x ${phala_scripts_tools_dir}/sgx-detect
   ${phala_scripts_tools_dir}/sgx-detect > ${_sgx_msg_file} 2>&1
   _sgx_cpu_support_number=$(awk '/CPU support/ {print $1}' ${_sgx_msg_file}|wc -l)
   _sgx_libsgx_encalve=$(awk '/libsgx_enclave_common/ {print $1}' ${_sgx_msg_file})
