@@ -44,7 +44,7 @@ function phala_scripts_status_kusama() {
 }
 
 function phala_scripts_status(){
-
+  # echo "正在获取公共节点区块信息，可能需要一段时间..."
   trap "clear;exit" INT
 
   #minutes ago
